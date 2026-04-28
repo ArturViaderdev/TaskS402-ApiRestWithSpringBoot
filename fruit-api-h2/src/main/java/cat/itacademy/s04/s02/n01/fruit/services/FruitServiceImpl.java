@@ -6,6 +6,9 @@ import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class FruitServiceImpl implements FruitService{
     FruitRepository fruitRepository;
@@ -27,5 +30,44 @@ public class FruitServiceImpl implements FruitService{
         }
         fruit = fruitRepository.save(fruit);
         return fruit;
+    }
+
+    @Override
+    public List<Fruit> readAllFruits() {
+        List<Fruit> fruits = fruitRepository.findAll();
+        return fruits;
+    }
+
+    @Override
+    public Optional<Fruit> getFruitById(Long id) {
+        Optional<Fruit> fruit = fruitRepository.findById(id);
+        return fruit;
+    }
+
+    @Override
+    public Optional<Fruit> updateFruit(Fruit fruit, Long id) {
+        if(fruitRepository.existsById(id))
+        {
+            fruit.setId(id);
+            fruitRepository.save(fruit);
+            return Optional.of(fruit);
+        }
+        else
+        {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public boolean deleteFruit(Long id) {
+        if(fruitRepository.existsById(id))
+        {
+            fruitRepository.deleteById(id);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

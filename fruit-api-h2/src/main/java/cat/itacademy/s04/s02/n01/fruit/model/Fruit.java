@@ -1,6 +1,8 @@
 package cat.itacademy.s04.s02.n01.fruit.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 
 
@@ -10,7 +12,9 @@ public class Fruit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
+    @NotBlank
     public String name;
+    @Positive
     public int weightInKilos;
 
     public Fruit()
