@@ -17,6 +17,18 @@ public class Fruit {
     @Positive
     public int weightInKilos;
 
+    @ManyToOne
+    @JoinColumn(name = "provider_id", nullable = false)
+    public Provider provider;
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
     public Fruit()
     {
 

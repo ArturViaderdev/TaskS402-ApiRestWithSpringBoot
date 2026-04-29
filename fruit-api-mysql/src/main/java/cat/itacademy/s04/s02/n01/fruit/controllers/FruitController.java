@@ -2,6 +2,7 @@ package cat.itacademy.s04.s02.n01.fruit.controllers;
 
 import cat.itacademy.s04.s02.n01.fruit.exception.FruitNameIsEmpty;
 import cat.itacademy.s04.s02.n01.fruit.exception.IncorrectWeightException;
+import cat.itacademy.s04.s02.n01.fruit.exception.ProviderNotFound;
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
@@ -25,8 +26,16 @@ public class FruitController {
 
     @GetMapping("/fruits")
     @ResponseStatus(HttpStatus.OK)
-    public List<Fruit> getFruits(){
-        return fruitService.readAllFruits();
+    public List<Fruit> getFruits(@RequestParam(name="providerId",defaultValue = "") String provider){
+        try {
+            return fruitService.readAllFruits(Long.parseLong(provider));
+        } catch (ProviderNotFound e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        catch(NumberFormatException ex)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/fruits/{id}")
@@ -52,11 +61,15 @@ public class FruitController {
 
     @PostMapping("/fruits")
     @ResponseStatus(HttpStatus.CREATED)
-    public Fruit postFruits(@RequestBody Fruit fruit) {
+    public Fruit postFruits(@RequestBody Fruit fruit, @RequestParam(name="providerId",defaultValue = "") String provider) {
         try {
-            return fruitService.createFruit(fruit);
-        } catch (FruitNameIsEmpty | IncorrectWeightException e) {
+            return fruitService.createFruit(fruit,Long.parseLong(provider));
+        } catch (FruitNameIsEmpty | IncorrectWeightException | NumberFormatException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        catch(ProviderNotFound e)
+        {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
 
