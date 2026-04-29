@@ -64,4 +64,9 @@ public class ProviderServiceImpl implements ProviderService{
         }
         providerRepository.deleteById(idProvider);
     }
+
+    @Override
+    public List<Provider> getProviders() {
+        return providerRepository.findAll();
+    }
 }

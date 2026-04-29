@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,6 +17,13 @@ public class ProviderController {
 
     public ProviderController(ProviderService providerService) {
         this.providerService = providerService;
+    }
+
+    @GetMapping("/providers")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Provider> getProviders()
+    {
+        return providerService.getProviders();
     }
 
     @PostMapping("/providers")
