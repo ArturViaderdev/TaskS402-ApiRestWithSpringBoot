@@ -40,7 +40,7 @@ public class ProviderController {
 
     @PutMapping("/providers/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Provider updateFruit(@RequestBody Provider provider, @PathVariable String id) {
+    public Provider updateProvider(@RequestBody Provider provider, @PathVariable String id) {
         try {
             return providerService.updateProvider(provider, Long.parseLong(id));
 
@@ -53,7 +53,7 @@ public class ProviderController {
 
     @DeleteMapping("/providers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFruit(@PathVariable String id) {
+    public void deleteProvider(@PathVariable String id) {
 
         try {
             providerService.deleteProvider(Long.parseLong(id));

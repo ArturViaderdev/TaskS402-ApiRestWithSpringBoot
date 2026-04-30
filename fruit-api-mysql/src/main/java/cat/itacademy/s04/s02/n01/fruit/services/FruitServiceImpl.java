@@ -59,12 +59,21 @@ public class FruitServiceImpl implements FruitService{
     }
 
     @Override
-    public Optional<Fruit> updateFruit(Fruit fruit, Long id) {
+    public Optional<Fruit> updateFruit(Fruit fruit, Long id,Long provider) {
         if(fruitRepository.existsById(id))
         {
             fruit.setId(id);
-            fruitRepository.save(fruit);
-            return Optional.of(fruit);
+            Optional<Provider> providerObject = providerRepository.findById(provider);
+            if(providerObject.isEmpty())
+            {
+                return Optional.empty();
+            }
+            else
+            {
+                fruit.setProvider(providerObject.get());
+                fruitRepository.save(fruit);
+                return Optional.of(fruit);
+            }
         }
         else
         {

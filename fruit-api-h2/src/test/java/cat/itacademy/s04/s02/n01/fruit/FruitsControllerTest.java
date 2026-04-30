@@ -67,7 +67,9 @@ public class FruitsControllerTest {
                                 "  \"name\": \"Poma\",\n" +
                                 "  \"weightInKilos\": \"200\"\n" +
                                 "}")).andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").exists());
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.name").value("Poma"))
+                .andExpect(jsonPath("$.weightInKilos").value("200"));
     }
 
     @Order(4)

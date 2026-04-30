@@ -12,6 +12,6 @@ public interface FruitService {
     Fruit createFruit(Fruit fruit, Long idProvider) throws FruitNameIsEmpty, IncorrectWeightException, ProviderNotFound;
     List<Fruit> readAllFruits(long providerId) throws ProviderNotFound;
     Optional<Fruit> getFruitById(Long id);
-    Optional<Fruit> updateFruit(Fruit fruit, Long id);
+    Optional<Fruit> updateFruit(Fruit fruit, Long id, Long provider);
     boolean deleteFruit(Long id);
 }

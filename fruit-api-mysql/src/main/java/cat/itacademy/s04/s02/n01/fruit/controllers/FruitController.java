@@ -75,9 +75,9 @@ public class FruitController {
 
     @PutMapping("/fruits/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Fruit updateFruit(@RequestBody Fruit fruit,@PathVariable String id) {
+    public Fruit updateFruit(@RequestBody Fruit fruit,@PathVariable String id,@RequestParam(name="providerId",defaultValue = "")String provider) {
         try {
-            Optional<Fruit> modfruit = fruitService.updateFruit(fruit,Long.parseLong(id));
+            Optional<Fruit> modfruit = fruitService.updateFruit(fruit,Long.parseLong(id),Long.parseLong(provider));
             if(modfruit.isEmpty())
             {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
