@@ -3,22 +3,19 @@ package cat.itacademy.s04.s02.n01.fruit.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
-import lombok.Getter;
-
 
 @Entity
-@Table(name="fruits")
+@Table(name = "fruits")
 public class Fruit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
     @NotBlank
-    public String name;
+    private String name;
     @Positive
-    public int weightInKilos;
+    private int weightInKilos;
 
-    public Fruit()
-    {
+    public Fruit() {
 
     }
 

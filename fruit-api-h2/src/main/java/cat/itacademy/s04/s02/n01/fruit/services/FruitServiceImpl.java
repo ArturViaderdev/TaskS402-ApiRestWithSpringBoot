@@ -1,35 +1,25 @@
 package cat.itacademy.s04.s02.n01.fruit.services;
 
-import cat.itacademy.s04.s02.n01.fruit.exception.FruitNameIsEmpty;
-import cat.itacademy.s04.s02.n01.fruit.exception.IncorrectWeightException;
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class FruitServiceImpl implements FruitService{
+public class FruitServiceImpl implements FruitService {
     FruitRepository fruitRepository;
 
-    public FruitServiceImpl(FruitRepository fruitRepository)
-    {
+    public FruitServiceImpl(FruitRepository fruitRepository) {
         this.fruitRepository = fruitRepository;
     }
 
     @Override
-    public Fruit createFruit(Fruit fruit) throws FruitNameIsEmpty, IncorrectWeightException {
-        if(fruit.getName().isEmpty())
-        {
-            throw new FruitNameIsEmpty();
-        }
-        if(fruit.getWeightInKilos()<=0)
-        {
-            throw new IncorrectWeightException();
-        }
-        fruit = fruitRepository.save(fruit);
-        return fruit;
+    public Fruit createFruit(Fruit fruit) {
+        return fruitRepository.save(fruit);
     }
 
     @Override
@@ -39,35 +29,34 @@ public class FruitServiceImpl implements FruitService{
     }
 
     @Override
-    public Optional<Fruit> getFruitById(Long id) {
+    public Fruit getFruitById(Long id) {
         Optional<Fruit> fruit = fruitRepository.findById(id);
-        return fruit;
-    }
-
-    @Override
-    public Optional<Fruit> updateFruit(Fruit fruit, Long id) {
-        if(fruitRepository.existsById(id))
-        {
-            fruit.setId(id);
-            fruitRepository.save(fruit);
-            return Optional.of(fruit);
-        }
-        else
-        {
-            return Optional.empty();
+        if (fruit.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } else {
+            return fruit.get();
         }
     }
 
     @Override
-    public boolean deleteFruit(Long id) {
-        if(fruitRepository.existsById(id))
-        {
-            fruitRepository.deleteById(id);
-            return true;
+    public Fruit updateFruit(Fruit fruit, Long id) {
+        if (!fruitRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        else
-        {
-            return false;
+        fruit.setId(id);
+        return fruitRepository.save(fruit);
+    }
+
+    @Override
+    public void deleteFruit(Long id) {
+        if (!(fruitRepository.existsById(id))) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Fruita no trobada.");
         }
+        fruitRepository.deleteById(id);
+    }
+
+    @Override
+    public void removeAll() {
+        fruitRepository.deleteAll();
     }
 }

@@ -1,8 +1,7 @@
 package cat.itacademy.s04.s02.n01.fruit;
 
-import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
+import cat.itacademy.s04.s02.n01.fruit.services.FruitService;
 import com.jayway.jsonpath.JsonPath;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,8 +11,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,11 +27,16 @@ public class FruitsControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private FruitService fruitService;
+
+    @BeforeEach
+    public void clean() {
+        fruitService.removeAll();
+    }
 
     @Test
     @Order(1)
-    void getFruitsTestsIsEmptyIntially() throws Exception {
+    public void getFruitsTestsIsEmptyIntially() throws Exception {
         mockMvc.perform(get("/fruits")).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
@@ -107,7 +109,7 @@ public class FruitsControllerTest {
 
     @Order(7)
     @Test
-    public void updateFruitTest() throws Exception{
+    public void updateFruitTest() throws Exception {
         MvcResult result = mockMvc.perform(post("/fruits").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Poma\",\n" +
@@ -115,11 +117,11 @@ public class FruitsControllerTest {
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String id = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(put("/fruits/{id}",id).contentType(MediaType.APPLICATION_JSON)
-                .content("{\n" +
-                        "  \"name\": \"Manzana\",\n" +
-                        "  \"weightInKilos\": \"300\"\n" +
-                        "}")).andExpect(status().isOk())
+        mockMvc.perform(put("/fruits/{id}", id).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"name\": \"Manzana\",\n" +
+                                "  \"weightInKilos\": \"300\"\n" +
+                                "}")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("Manzana"))
                 .andExpect(jsonPath("$.weightInKilos").value("300"));
@@ -133,17 +135,17 @@ public class FruitsControllerTest {
     @Order(8)
     @Test
     public void updateFruitIdNotFoundTest() throws Exception {
-        mockMvc.perform(put("/fruits/{id}","999").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "  \"name\": \"Manzana\",\n" +
-                                "  \"weightInKilos\": \"300\"\n" +
-                                "}")).andExpect(status().isNotFound());
+        mockMvc.perform(put("/fruits/{id}", "999").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Manzana\",\n" +
+                        "  \"weightInKilos\": \"300\"\n" +
+                        "}")).andExpect(status().isNotFound());
     }
 
     @Order(9)
     @Test
     public void updateFruitInputMissmatch() throws Exception {
-        mockMvc.perform(put("/fruits/{id}","abc").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/fruits/{id}", "abc").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Manzana\",\n" +
                         "  \"weightInKilos\": \"300\"\n" +
@@ -167,22 +169,22 @@ public class FruitsControllerTest {
         JsonNode rootNode = mapper.readTree(results);
         int size = rootNode.size();
 
-        mockMvc.perform(delete("/fruits/{id}",id)).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/fruits/{id}", id)).andExpect(status().isNoContent());
 
         mockMvc.perform(get("/fruits")).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(size-1));
+                .andExpect(jsonPath("$.length()").value(size - 1));
     }
 
     @Order(11)
     @Test
     public void deleteFruitIdNotFoundTest() throws Exception {
-        mockMvc.perform(delete("/fruits/{id}","999")).andExpect(status().isNotFound());
+        mockMvc.perform(delete("/fruits/{id}", "999")).andExpect(status().isNotFound());
     }
 
     @Order(12)
     @Test
     public void deleteFruitInputMissmatch() throws Exception {
-        mockMvc.perform(delete("/fruits/{id}","abc")).andExpect(status().isBadRequest());
+        mockMvc.perform(delete("/fruits/{id}", "abc")).andExpect(status().isBadRequest());
     }
 }
