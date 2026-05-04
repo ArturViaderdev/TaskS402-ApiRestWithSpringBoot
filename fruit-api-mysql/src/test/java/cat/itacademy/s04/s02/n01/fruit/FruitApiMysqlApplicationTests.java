@@ -55,20 +55,20 @@ public class FruitApiMysqlApplicationTests {
         providerRepository.deleteAll();
     }
 
-    @Order(1)
+
     @Test
     public void getFruitsProviderNotFound() throws Exception {
 
         mockMvc.perform(get("/fruits").param("providerId","999")).andExpect(status().isNotFound());
     }
 
-    @Order(2)
+
     @Test
     public void getFruitsProviderInputMissmatch() throws Exception{
         mockMvc.perform(get("/fruits").param("providerId","abc")).andExpect(status().isBadRequest());
     }
 
-    @Order(3)
+
     @Test
     public void addProviderTest() throws Exception
     {
@@ -82,7 +82,7 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.country").value("Spain"));
     }
 
-    @Order(4)
+
     @Test
     public void providerNameIsEmpty() throws Exception
     {
@@ -93,7 +93,7 @@ public class FruitApiMysqlApplicationTests {
                                 "}")).andExpect(status().isBadRequest());
     }
 
-    @Order(5)
+
     @Test
     public void providerNameAlreadyExists() throws Exception
     {
@@ -109,7 +109,7 @@ public class FruitApiMysqlApplicationTests {
                         "}")).andExpect(status().isConflict());
     }
 
-    @Order(6)
+
     @Test
     public void addFruitsToProvider() throws Exception
     {
@@ -130,7 +130,7 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.weightInKilos").value("200"));
     }
 
-    @Order(7)
+
     @Test
     public void addFruitsProviderNotFound() throws Exception
     {
@@ -141,7 +141,7 @@ public class FruitApiMysqlApplicationTests {
                                 "}")).andExpect(status().isNotFound());
     }
 
-    @Order(8)
+
     @Test
     public void addFruitsProviderMissmatch() throws Exception
     {
@@ -152,7 +152,7 @@ public class FruitApiMysqlApplicationTests {
                         "}")).andExpect(status().isBadRequest());
     }
 
-    @Order(9)
+
     @Test
     public void getFruitsTest() throws Exception
     {
@@ -180,7 +180,7 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
-    @Order(10)
+
     @Test
     public void getFruitByIdTest() throws Exception {
 
@@ -207,21 +207,21 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.weightInKilos").value("200"));
     }
 
-    @Order(11)
+
     @Test
     public void getFruitsByIdNotFoundTest() throws Exception {
         mockMvc.perform(get("/fruits/{id}", "999"))
                 .andExpect(status().isNotFound());
     }
 
-    @Order(12)
+
     @Test
     public void getFruitsBadRequestTest() throws Exception {
         mockMvc.perform(get("/fruits/{id}", "abc"))
                 .andExpect(status().isBadRequest());
     }
 
-    @Order(13)
+
     @Test
     public void updateFruitTest() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -254,7 +254,7 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.weightInKilos").value("300"));
     }
 
-    @Order(14)
+
     @Test
     public void getProvidersTest() throws Exception {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -272,7 +272,7 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
-    @Order(15)
+
     @Test
     public void updateProviderTest() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -292,7 +292,7 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.id").value(idProvider));
     }
 
-    @Order(16)
+
     @Test
     public void updateProviderIdNotFound() throws Exception {
         mockMvc.perform(put("/providers/{id}","999").contentType(MediaType.APPLICATION_JSON)
@@ -302,7 +302,7 @@ public class FruitApiMysqlApplicationTests {
                         "}")).andExpect(status().isNotFound());
     }
 
-    @Order(17)
+
     @Test
     public void updateProviderInvalidId() throws Exception{
         mockMvc.perform(put("/providers/{id}","abc").contentType(MediaType.APPLICATION_JSON)
@@ -312,7 +312,7 @@ public class FruitApiMysqlApplicationTests {
                         "}")).andExpect(status().isBadRequest());
     }
 
-    @Order(17)
+
     @Test
     public void updateProviderNameIsEmpty() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -329,7 +329,7 @@ public class FruitApiMysqlApplicationTests {
                         "}")).andExpect(status().isBadRequest());
     }
 
-    @Order(18)
+
     @Test
     public void updateProviderNameAlreadyExists() throws Exception {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -351,7 +351,7 @@ public class FruitApiMysqlApplicationTests {
                                 "}")).andExpect(status().isConflict());
     }
 
-    @Order(19)
+
     @Test
     public void deleteProvider() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -364,7 +364,7 @@ public class FruitApiMysqlApplicationTests {
         mockMvc.perform(delete("/providers/{id}",idProvider)).andExpect(status().isNoContent());
     }
 
-    @Order(20)
+
     @Test
     public void deleteProviderHasFruits() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -384,13 +384,13 @@ public class FruitApiMysqlApplicationTests {
         mockMvc.perform(delete("/providers/{id}",idProvider)).andExpect(status().isConflict());
     }
 
-    @Order(21)
+
     @Test
     public void deleteProviderIdNotFound() throws Exception {
         mockMvc.perform(delete("/providers/{id}","999")).andExpect(status().isNotFound());
     }
 
-    @Order(22)
+
     @Test
     public void deleteProviderBadId() throws Exception{
         mockMvc.perform(delete("/providers/{id}","abc")).andExpect(status().isBadRequest());
