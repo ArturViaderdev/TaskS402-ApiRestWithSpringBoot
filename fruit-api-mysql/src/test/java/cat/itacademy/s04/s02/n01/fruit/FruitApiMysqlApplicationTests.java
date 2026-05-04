@@ -253,4 +253,24 @@ public class FruitApiMysqlApplicationTests {
                 .andExpect(jsonPath("$.name").value("Manzana"))
                 .andExpect(jsonPath("$.weightInKilos").value("300"));
     }
+
+    @Order(14)
+    @Test
+    public void getProvidersTest() throws Exception {
+        mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Frutero\",\n" +
+                        "  \"country\": \"Spain\"\n" +
+                        "}"));
+        mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Frutera\",\n" +
+                        "  \"country\": \"France\"\n" +
+                        "}"));
+        mockMvc.perform(get("/providers")).andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2));
+    }
+
+
 }

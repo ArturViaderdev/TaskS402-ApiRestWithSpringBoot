@@ -1,7 +1,7 @@
 package cat.itacademy.s04.s02.n01.fruit.services;
 
+import cat.itacademy.s04.s02.n01.fruit.exception.FruitIdDoesNotExists;
 import cat.itacademy.s04.s02.n01.fruit.exception.FruitNameIsEmpty;
-import cat.itacademy.s04.s02.n01.fruit.exception.IncorrectWeightException;
 import cat.itacademy.s04.s02.n01.fruit.exception.ProviderNotFound;
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.Provider;
@@ -23,7 +23,7 @@ public class FruitServiceImpl implements FruitService{
     }
 
     @Override
-    public Fruit createFruit(Fruit fruit, Long idProvider) throws FruitNameIsEmpty, IncorrectWeightException, ProviderNotFound {
+    public Fruit createFruit(Fruit fruit, Long idProvider) throws FruitNameIsEmpty, ProviderNotFound {
         Optional<Provider> provider = providerRepository.findById(idProvider);
         if(provider.isEmpty())
         {
@@ -32,10 +32,6 @@ public class FruitServiceImpl implements FruitService{
         if(fruit.getName().isEmpty())
         {
             throw new FruitNameIsEmpty();
-        }
-        if(fruit.getWeightInKilos()<=0)
-        {
-            throw new IncorrectWeightException();
         }
         fruit.setProvider(provider.get());
         fruit = fruitRepository.save(fruit);
@@ -53,44 +49,37 @@ public class FruitServiceImpl implements FruitService{
     }
 
     @Override
-    public Optional<Fruit> getFruitById(Long id) {
+    public Fruit getFruitById(Long id) {
         Optional<Fruit> fruit = fruitRepository.findById(id);
-        return fruit;
+        if(fruit.isEmpty())
+        {
+            throw new FruitIdDoesNotExists();
+        }
+        return fruit.get();
     }
 
     @Override
-    public Optional<Fruit> updateFruit(Fruit fruit, Long id,Long provider) {
-        if(fruitRepository.existsById(id))
-        {
+    public Fruit updateFruit(Fruit fruit, Long id,Long provider) {
+        if(!(fruitRepository.existsById(id))) {
+            throw new FruitIdDoesNotExists();
+        }
             fruit.setId(id);
             Optional<Provider> providerObject = providerRepository.findById(provider);
             if(providerObject.isEmpty())
             {
-                return Optional.empty();
+                throw new ProviderNotFound();
             }
-            else
-            {
-                fruit.setProvider(providerObject.get());
-                fruitRepository.save(fruit);
-                return Optional.of(fruit);
-            }
-        }
-        else
-        {
-            return Optional.empty();
-        }
+            fruit.setProvider(providerObject.get());
+            fruitRepository.save(fruit);
+            return fruit;
     }
 
     @Override
-    public boolean deleteFruit(Long id) {
-        if(fruitRepository.existsById(id))
+    public void deleteFruit(Long id) {
+        if(!(fruitRepository.existsById(id)))
         {
-            fruitRepository.deleteById(id);
-            return true;
-        }
-        else
-        {
-            return false;
+            throw new FruitIdDoesNotExists();
+
         }
     }
 }

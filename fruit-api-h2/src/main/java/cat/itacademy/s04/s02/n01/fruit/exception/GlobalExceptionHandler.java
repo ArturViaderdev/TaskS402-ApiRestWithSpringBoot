@@ -11,22 +11,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<ErrorResponse> handleExceptionBadId(NumberFormatException e, WebRequest request) {
-        String path = ((ServletWebRequest) request).getRequest().getRequestURI();
-        ErrorResponse body = new ErrorResponse(HttpStatus.BAD_REQUEST, "Valor numèric no vàlid", path);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleExceptionBadNumber(MethodArgumentNotValidException e, WebRequest request) {
-        String path = ((ServletWebRequest) request).getRequest().getRequestURI();
-        ErrorResponse body = new ErrorResponse(HttpStatus.BAD_REQUEST, "Valor numèric no vàlid", path);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorResponse> handleTypeMissmatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
+    @ExceptionHandler({NumberFormatException.class, MethodArgumentNotValidException.class,MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ErrorResponse> badRequest(NumberFormatException e, WebRequest request) {
         String path = ((ServletWebRequest) request).getRequest().getRequestURI();
         ErrorResponse body = new ErrorResponse(HttpStatus.BAD_REQUEST, "Valor no vàlid", path);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);

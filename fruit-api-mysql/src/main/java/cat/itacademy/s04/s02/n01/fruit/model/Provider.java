@@ -10,11 +10,11 @@ import java.util.Collection;
 public class Provider {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
     @NotBlank
-    public String name;
+    private String name;
     @NotBlank
-    public String country;
+    private String country;
 
     public Long getId() {
         return id;

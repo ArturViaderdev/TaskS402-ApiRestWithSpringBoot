@@ -11,11 +11,11 @@ import lombok.Getter;
 public class Fruit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
     @NotBlank
-    public String name;
+    private String name;
     @Positive
-    public int weightInKilos;
+    private int weightInKilos;
 
     @ManyToOne
     @JoinColumn(name = "provider_id", nullable = false)
