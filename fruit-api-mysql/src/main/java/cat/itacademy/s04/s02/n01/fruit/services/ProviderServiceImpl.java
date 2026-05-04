@@ -24,18 +24,35 @@ public class ProviderServiceImpl implements ProviderService{
         this.fruitRepository = fruitRepository;
     }
 
-    @Override
-    public Provider createProvider(Provider provider) throws ProviderNameIsEmpty, ProviderNameAlreadyExists {
+    private Provider saveProvider(Provider provider, boolean update)
+    {
         if(provider.getName().isEmpty())
         {
             throw new ProviderNameIsEmpty();
         }
-        if(!(providerRepository.findByName(provider.getName()).isEmpty()))
+        Optional<Provider> providerName= providerRepository.findByName(provider.getName());
+        if(!(providerName.isEmpty()))
         {
-            throw new ProviderNameAlreadyExists();
+            if(update)
+            {
+                if(!(providerName.get().getId().equals(provider.getId())))
+                {
+                    throw new ProviderNameAlreadyExists();
+                }
+            }
+            else
+            {
+                throw new ProviderNameAlreadyExists();
+            }
         }
         provider = providerRepository.save(provider);
         return provider;
+    }
+
+    @Override
+    public Provider createProvider(Provider provider) throws ProviderNameIsEmpty, ProviderNameAlreadyExists {
+        return saveProvider(provider,false);
+
     }
 
     @Override
@@ -46,8 +63,7 @@ public class ProviderServiceImpl implements ProviderService{
             throw new ProviderNotFound();
         }
         provider.setId(existProvider.get().getId());
-        providerRepository.save(provider);
-        return provider;
+        return saveProvider(provider,true);
     }
 
     @Override
@@ -58,7 +74,7 @@ public class ProviderServiceImpl implements ProviderService{
             throw new ProviderNotFound();
         }
         List<Fruit> fruits = fruitRepository.findByProviderId(idProvider);
-        if(fruits.isEmpty())
+        if(!(fruits.isEmpty()))
         {
             throw new ProviderHasFruits();
         }

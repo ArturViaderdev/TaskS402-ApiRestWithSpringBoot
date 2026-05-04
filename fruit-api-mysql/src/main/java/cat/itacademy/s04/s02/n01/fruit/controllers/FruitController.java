@@ -31,8 +31,8 @@ public class FruitController {
 
     @GetMapping("/fruits/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Fruit getFruitById(@PathVariable String id){
-            Fruit fruit = fruitService.getFruitById(Long.parseLong(id));
+    public Fruit getFruitById(@PathVariable Long id){
+            Fruit fruit = fruitService.getFruitById(id);
 
             return fruit;
     }
@@ -46,16 +46,16 @@ public class FruitController {
 
     @PutMapping("/fruits/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Fruit updateFruit(@RequestBody Fruit fruit,@PathVariable String id,@RequestParam(name="providerId",defaultValue = "")String provider) {
+    public Fruit updateFruit(@RequestBody Fruit fruit,@PathVariable Long id,@RequestParam(name="providerId",defaultValue = "")Long provider) {
 
-            return fruitService.updateFruit(fruit,Long.parseLong(id),Long.parseLong(provider));
+            return fruitService.updateFruit(fruit,id,provider);
 
     }
 
     @DeleteMapping("/fruits/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteFruit(@PathVariable String id){
-            fruitService.deleteFruit(Long.parseLong(id));
+    public void deleteFruit(@PathVariable Long id){
+            fruitService.deleteFruit(id);
 
     }
 }

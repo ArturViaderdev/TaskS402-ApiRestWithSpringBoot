@@ -40,7 +40,7 @@ public class ProviderController {
 
     @DeleteMapping("/providers/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProvider(@PathVariable String id) {
-            providerService.deleteProvider(Long.parseLong(id));
+    public void deleteProvider(@PathVariable Long id) {
+            providerService.deleteProvider(id);
     }
 }
