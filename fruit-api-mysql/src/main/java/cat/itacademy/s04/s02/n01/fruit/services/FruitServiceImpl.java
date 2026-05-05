@@ -79,7 +79,7 @@ public class FruitServiceImpl implements FruitService{
         if(!(fruitRepository.existsById(id)))
         {
             throw new FruitIdDoesNotExists();
-
         }
+        fruitRepository.deleteById(id);
     }
 }
