@@ -31,7 +31,7 @@ public class ProviderServiceImpl implements ProviderService{
             throw new ProviderNameIsEmpty();
         }
         Optional<Provider> providerName= providerRepository.findByName(provider.getName());
-        if(!(providerName.isEmpty()))
+        if((providerName.isPresent()))
         {
             if(update)
             {
