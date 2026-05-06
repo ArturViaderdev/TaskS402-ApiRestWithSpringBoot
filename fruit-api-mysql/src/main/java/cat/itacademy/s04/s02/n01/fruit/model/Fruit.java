@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 
+import java.util.Objects;
+
 
 @Entity
 @Table(name="fruits")
@@ -56,5 +58,17 @@ public class Fruit {
 
     public void setWeightInKilos(int weightInKilos) {
         this.weightInKilos = weightInKilos;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Fruit fruit = (Fruit) o;
+        return weightInKilos == fruit.weightInKilos && Objects.equals(id, fruit.id) && Objects.equals(name, fruit.name) && Objects.equals(provider, fruit.provider);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, weightInKilos, provider);
     }
 }

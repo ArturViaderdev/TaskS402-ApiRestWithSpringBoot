@@ -5,8 +5,8 @@ import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.model.Provider;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import cat.itacademy.s04.s02.n01.fruit.repository.ProviderRepository;
-import cat.itacademy.s04.s02.n01.fruit.services.FruitServiceImpl;
-import cat.itacademy.s04.s02.n01.fruit.services.ProviderServiceImpl;
+import cat.itacademy.s04.s02.n01.fruit.service.FruitServiceImpl;
+import cat.itacademy.s04.s02.n01.fruit.service.ProviderServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -62,7 +62,7 @@ public class FruitsServiceTests {
         Assertions.assertEquals(1L, result.getId());
         Assertions.assertEquals("Poma", result.getName());
         Assertions.assertEquals(200, result.getWeightInKilos());
-        verify(fruitRepository).save(fruit);
+        verify(fruitRepository).save(any(Fruit.class));
     }
 
     @Test

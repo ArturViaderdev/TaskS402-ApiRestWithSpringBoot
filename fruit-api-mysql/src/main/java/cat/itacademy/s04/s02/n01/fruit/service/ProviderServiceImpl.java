@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.services;
+package cat.itacademy.s04.s02.n01.fruit.service;
 
 import cat.itacademy.s04.s02.n01.fruit.exception.ProviderHasFruits;
 import cat.itacademy.s04.s02.n01.fruit.exception.ProviderNameAlreadyExists;
@@ -15,8 +15,8 @@ import java.util.Optional;
 
 @Service
 public class ProviderServiceImpl implements ProviderService{
-    ProviderRepository providerRepository;
-    FruitRepository fruitRepository;
+    private final ProviderRepository providerRepository;
+    private final FruitRepository fruitRepository;
 
     public ProviderServiceImpl(ProviderRepository providerRepository, FruitRepository fruitRepository)
     {
@@ -45,8 +45,7 @@ public class ProviderServiceImpl implements ProviderService{
                 throw new ProviderNameAlreadyExists();
             }
         }
-        provider = providerRepository.save(provider);
-        return provider;
+        return providerRepository.save(provider);
     }
 
     @Override

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name="providers")
@@ -13,6 +14,19 @@ public class Provider {
     private Long id;
     @NotBlank
     private String name;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Provider provider = (Provider) o;
+        return Objects.equals(id, provider.id) && Objects.equals(name, provider.name) && Objects.equals(country, provider.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, country);
+    }
+
     @NotBlank
     private String country;
 

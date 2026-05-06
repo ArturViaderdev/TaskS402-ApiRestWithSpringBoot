@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.services;
+package cat.itacademy.s04.s02.n01.fruit.service;
 
 import cat.itacademy.s04.s02.n01.fruit.exception.ProviderHasFruits;
 import cat.itacademy.s04.s02.n01.fruit.exception.ProviderNameAlreadyExists;
@@ -7,7 +7,6 @@ import cat.itacademy.s04.s02.n01.fruit.exception.ProviderNotFound;
 import cat.itacademy.s04.s02.n01.fruit.model.Provider;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProviderService {
     Provider createProvider(Provider provider) throws ProviderNameIsEmpty, ProviderNameAlreadyExists;

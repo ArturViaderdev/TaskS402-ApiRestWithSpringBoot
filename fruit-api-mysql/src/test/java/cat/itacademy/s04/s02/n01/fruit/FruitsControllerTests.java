@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,21 +33,8 @@ public class FruitsControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private FruitRepository fruitRepository;
-
-    @Autowired
-    private ProviderRepository providerRepository;
-
-    @BeforeEach
-    void setUp()
-    {
-        fruitRepository.deleteAll();
-        providerRepository.deleteAll();
-    }
-
-
     @Test
+    @Transactional
     public void getFruitsProviderNotFound() throws Exception {
 
         mockMvc.perform(get("/fruits").param("providerId","999")).andExpect(status().isNotFound());
@@ -54,11 +42,13 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void getFruitsProviderInputMissmatch() throws Exception{
         mockMvc.perform(get("/fruits").param("providerId","abc")).andExpect(status().isBadRequest());
     }
 
     @Test
+    @Transactional
     public void addFruitsToProvider() throws Exception
     {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -80,6 +70,7 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void addFruitsProviderNotFound() throws Exception
     {
         mockMvc.perform(post("/fruits").param("providerId","999").contentType(MediaType.APPLICATION_JSON)
@@ -91,6 +82,7 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void addFruitsProviderMissmatch() throws Exception
     {
         mockMvc.perform(post("/fruits").param("providerId","abc").contentType(MediaType.APPLICATION_JSON)
@@ -102,6 +94,7 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void getFruitsTest() throws Exception
     {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -130,6 +123,7 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void getFruitByIdTest() throws Exception {
 
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -157,6 +151,7 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void getFruitsByIdNotFoundTest() throws Exception {
         mockMvc.perform(get("/fruits/{id}", "999"))
                 .andExpect(status().isNotFound());
@@ -164,6 +159,7 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void getFruitsBadRequestTest() throws Exception {
         mockMvc.perform(get("/fruits/{id}", "abc"))
                 .andExpect(status().isBadRequest());
@@ -171,6 +167,7 @@ public class FruitsControllerTests {
 
 
     @Test
+    @Transactional
     public void updateFruitTest() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +

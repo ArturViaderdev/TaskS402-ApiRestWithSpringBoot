@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.services;
+package cat.itacademy.s04.s02.n01.fruit.service;
 
 import cat.itacademy.s04.s02.n01.fruit.exception.FruitIdDoesNotExists;
 import cat.itacademy.s04.s02.n01.fruit.exception.FruitNameIsEmpty;
@@ -14,8 +14,8 @@ import java.util.Optional;
 
 @Service
 public class FruitServiceImpl implements FruitService{
-    FruitRepository fruitRepository;
-    ProviderRepository providerRepository;
+    private final FruitRepository fruitRepository;
+    private final ProviderRepository providerRepository;
     public FruitServiceImpl(FruitRepository fruitRepository, ProviderRepository providerRepository)
     {
         this.fruitRepository = fruitRepository;
@@ -33,9 +33,11 @@ public class FruitServiceImpl implements FruitService{
         {
             throw new FruitNameIsEmpty();
         }
-        fruit.setProvider(provider.get());
-        fruit = fruitRepository.save(fruit);
-        return fruit;
+        Fruit fruitToSave = new Fruit();
+        fruitToSave.setName(fruit.getName());
+        fruitToSave.setWeightInKilos(fruit.getWeightInKilos());
+        fruitToSave.setProvider(provider.get());
+        return fruitRepository.save(fruitToSave);
     }
 
     @Override

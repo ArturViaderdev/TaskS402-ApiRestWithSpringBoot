@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.services;
+package cat.itacademy.s04.s02.n01.fruit.service;
 
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 

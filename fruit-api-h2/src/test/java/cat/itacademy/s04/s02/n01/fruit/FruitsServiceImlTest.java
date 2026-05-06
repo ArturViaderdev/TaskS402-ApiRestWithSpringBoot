@@ -2,7 +2,7 @@ package cat.itacademy.s04.s02.n01.fruit;
 
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
-import cat.itacademy.s04.s02.n01.fruit.services.FruitServiceImpl;
+import cat.itacademy.s04.s02.n01.fruit.service.FruitServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

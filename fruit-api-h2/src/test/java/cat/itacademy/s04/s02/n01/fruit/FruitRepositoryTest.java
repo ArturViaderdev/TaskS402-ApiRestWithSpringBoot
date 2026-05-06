@@ -54,7 +54,9 @@ public class FruitRepositoryTest {
         secondFruit.setWeightInKilos(100);
         fruitRepository.saveAll(List.of(fruit, secondFruit));
         List<Fruit> result = fruitRepository.findAll();
+        List<Fruit> compareList = List.of(fruit,secondFruit);
         Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(result,compareList);
     }
 
     @Test

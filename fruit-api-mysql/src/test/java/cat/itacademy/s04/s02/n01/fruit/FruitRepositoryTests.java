@@ -11,6 +11,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,6 +82,9 @@ public class FruitRepositoryTests {
         fruitRepository.saveAll(List.of(fruit, secondFruit));
         List<Fruit> result = fruitRepository.findByProviderId(savedProvider.getId());
         Assertions.assertEquals(2, result.size());
+        List<Fruit> compareList = List.of(fruit,secondFruit);
+
+        Assertions.assertEquals(result,compareList);
     }
 
     @Test

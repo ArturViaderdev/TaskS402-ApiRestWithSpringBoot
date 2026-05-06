@@ -1,4 +1,4 @@
-package cat.itacademy.s04.s02.n01.fruit.services;
+package cat.itacademy.s04.s02.n01.fruit.service;
 
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Service
 public class FruitServiceImpl implements FruitService {
-    FruitRepository fruitRepository;
+    private final FruitRepository fruitRepository;
 
     public FruitServiceImpl(FruitRepository fruitRepository) {
         this.fruitRepository = fruitRepository;

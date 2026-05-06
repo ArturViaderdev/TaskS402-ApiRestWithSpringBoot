@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -33,16 +34,8 @@ public class ProvidersControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private ProviderRepository providerRepository;
-
-    @BeforeEach
-    void setUp()
-    {
-        providerRepository.deleteAll();
-    }
-
     @Test
+    @Transactional
     public void addProviderTest() throws Exception
     {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -56,6 +49,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void providerNameIsEmpty() throws Exception
     {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -66,6 +60,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void providerNameAlreadyExists() throws Exception
     {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
@@ -81,6 +76,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void getProvidersTest() throws Exception {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -98,6 +94,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void updateProviderTest() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -117,6 +114,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void updateProviderIdNotFound() throws Exception {
         mockMvc.perform(put("/providers/{id}","999").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -126,6 +124,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void updateProviderInvalidId() throws Exception{
         mockMvc.perform(put("/providers/{id}","abc").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -135,6 +134,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void updateProviderNameIsEmpty() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -151,6 +151,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void updateProviderNameAlreadyExists() throws Exception {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -172,6 +173,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void deleteProvider() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -184,6 +186,7 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void deleteProviderHasFruits() throws Exception{
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -203,11 +206,13 @@ public class ProvidersControllerTests {
     }
 
     @Test
+    @Transactional
     public void deleteProviderIdNotFound() throws Exception {
         mockMvc.perform(delete("/providers/{id}","999")).andExpect(status().isNotFound());
     }
 
     @Test
+    @Transactional
     public void deleteProviderBadId() throws Exception{
         mockMvc.perform(delete("/providers/{id}","abc")).andExpect(status().isBadRequest());
     }
