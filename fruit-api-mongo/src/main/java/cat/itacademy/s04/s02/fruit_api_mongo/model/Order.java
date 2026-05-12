@@ -8,6 +8,11 @@ import java.util.List;
 
 @Document(collection="Order")
 public class Order {
+    @Id
+    private String id;
+    private String clientName;
+    private LocalDate deliveryDate;
+    private List<OrderItem> items;
     public String getId() {
         return id;
     }
@@ -39,10 +44,4 @@ public class Order {
     public void setItems(List<OrderItem> items) {
         this.items = items;
     }
-
-    @Id
-    private String id;
-    private String clientName;
-    private LocalDate deliveryDate;
-    private List<OrderItem> items;
 }

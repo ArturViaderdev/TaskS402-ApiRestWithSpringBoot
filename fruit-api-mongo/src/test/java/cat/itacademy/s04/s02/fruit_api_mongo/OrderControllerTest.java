@@ -34,6 +34,29 @@ public class OrderControllerTest {
                                 "  \"items\":[{\"fruitName\":\"Poma\",\"quantityInKilos\":\"100\"}]"+
                                 "}")).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.clientName").value("Comprador"));
+                .andExpect(jsonPath("$.clientName").value("Comprador"))
+                .andExpect(jsonPath("$.items[0].fruitName").value("Poma"))
+                .andExpect(jsonPath("$.items[0].quantityInKilos").value("100"));
+    }
+
+    @Test
+    public void addProviderEmptyClientName() throws Exception
+    {
+        mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON)
+          .content("{\n" +
+            "  \"clientName\": \"\",\n" +
+            "  \"deliveryDate\": \"2025-01-01\",\n" +
+            "  \"items\":[{\"fruitName\":\"Poma\",\"quantityInKilos\":\"100\"}]"+
+            "}")).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void addProviderEmptyItemsList() throws Exception
+    {
+        mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"clientName\": \"Comprador\",\n" +
+                                "  \"deliveryDate\": \"2025-01-01\",\n" +
+                                "}")).andExpect(status().isBadRequest());
     }
 }

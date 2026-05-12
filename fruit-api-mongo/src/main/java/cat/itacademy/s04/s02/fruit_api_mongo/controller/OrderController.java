@@ -19,8 +19,9 @@ public class OrderController {
 
     @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    public Order postOrder(@RequestBody Order order) {
+    public ResponseEntity<Order> postOrder(@RequestBody Order order) {
         Order savedOrder = orderService.createOrder(order);
-        return savedOrder;
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedOrder.getId()).toUri();
+        return ResponseEntity.created(location).body(savedOrder);
     }
 }
