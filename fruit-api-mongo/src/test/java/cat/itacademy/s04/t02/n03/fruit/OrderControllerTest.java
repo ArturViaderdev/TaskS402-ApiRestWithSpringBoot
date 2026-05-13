@@ -15,8 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -129,5 +128,40 @@ public class OrderControllerTest {
     public void getOrderByIdNotFoundTest() throws Exception {
         mockMvc.perform(get("/orders/{id}", "999"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateOrderTest() throws Exception{
+        MvcResult result = mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"clientName\": \"Comprador\",\n" +
+                        "  \"deliveryDate\": \"2025-01-01\",\n" +
+                        "  \"items\":[{\"fruitName\":\"Poma\",\"quantityInKilos\":\"100\"}]"+
+                        "}")).andReturn();
+        String response = result.getResponse().getContentAsString();
+        String id = JsonPath.parse(response).read("$.id").toString();
+
+        mockMvc.perform(put("/orders/{id}",id).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\n" +
+                                "  \"clientName\": \"Juan\",\n" +
+                                "  \"deliveryDate\": \"2025-02-01\",\n" +
+                                "  \"items\":[{\"fruitName\":\"Pera\",\"quantityInKilos\":\"100\"}]"+
+                                "}")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.clientName").value("Juan"))
+                .andExpect(jsonPath("$.items").isArray())
+                .andExpect(jsonPath("$.items",hasSize(1)))
+                .andExpect(jsonPath("$.items[0].fruitName").value("Pera"))
+                .andExpect(jsonPath("$.items[0].quantityInKilos").value("100"));
+    }
+
+    @Test
+    public void updateOrderNotFound() throws Exception {
+        mockMvc.perform(put("/orders/{id}","999").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"clientName\": \"Juan\",\n" +
+                        "  \"deliveryDate\": \"2025-02-01\",\n" +
+                        "  \"items\":[{\"fruitName\":\"Pera\",\"quantityInKilos\":\"100\"}]"+
+                        "}")).andExpect(status().isNotFound());
     }
 }

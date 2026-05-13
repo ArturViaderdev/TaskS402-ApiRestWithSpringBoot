@@ -77,7 +77,7 @@ public class OrderRepositoryTest {
     }
 
     @Test
-    void findByIdExists() {
+    public void findByIdExists() {
         Order order = new Order();
         order.setClientName("Pedro");
         order.setDeliveryDate(LocalDate.now());
@@ -94,8 +94,30 @@ public class OrderRepositoryTest {
     }
 
     @Test
-    void findByIdNotExists() {
+    public void findByIdNotExists() {
         Optional<Order> result = orderRepository.findById("999");
         Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void saveUpdateOrder()
+    {
+        Order order = new Order();
+        order.setClientName("Pedro");
+        order.setDeliveryDate(LocalDate.now());
+        List<OrderItem> items = new ArrayList<>();
+        items.add(new OrderItem("Poma",100));
+        order.setItems(items);
+        Order savedOrder = orderRepository.save(order);
+        savedOrder.setClientName("Juan");
+        items.add(new OrderItem("Pera",200));
+        Order result = orderRepository.save(savedOrder);
+        Assertions.assertEquals(savedOrder.getId(),result.getId());
+        Assertions.assertEquals(result.getClientName(),"Juan");
+        Assertions.assertEquals(result.getItems().size(),2);
+        Assertions.assertEquals(result.getItems().get(0).getFruitName(),"Poma");
+        Assertions.assertEquals(result.getItems().get(1).getFruitName(),"Pera");
+        Assertions.assertEquals(result.getItems().get(0).getQuantityInKilos(),100);
+        Assertions.assertEquals(result.getItems().get(1).getQuantityInKilos(),200);
     }
 }

@@ -196,4 +196,21 @@ public class FruitsControllerTests {
                 .andExpect(jsonPath("$.name").value("Manzana"))
                 .andExpect(jsonPath("$.weightInKilos").value("300"));
     }
+
+    @Test
+    @Transactional
+    public void updateFruitNotFound() throws Exception{
+        MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Frutero\",\n" +
+                        "  \"country\": \"Spain\"\n" +
+                        "}")).andReturn();
+        String response = result.getResponse().getContentAsString();
+        String idProvider = JsonPath.parse(response).read("$.id").toString();
+        mockMvc.perform(put("/fruits/{id}",999).param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Manzana\",\n" +
+                        "  \"weightInKilos\": \"300\"\n" +
+                        "}")).andExpect(status().isNotFound());
+    }
 }

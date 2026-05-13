@@ -39,4 +39,11 @@ public class OrderController {
 
         return order;
     }
+
+    @PutMapping("/orders/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Order> updateOrder(@RequestBody Order provider, @PathVariable String id) {
+        Order savedOrder = orderService.updateOrder(provider, id);
+        return ResponseEntity.ok(savedOrder);
+    }
 }

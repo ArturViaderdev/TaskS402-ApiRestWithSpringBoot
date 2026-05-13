@@ -142,4 +142,44 @@ public class OrderServiceTest {
         RuntimeException ex = Assertions.assertThrows(OrderIdDoesNotExists.class, () -> orderService.getOrderById("999"));
         verify(orderRepository).findById("999");
     }
+
+    @Test
+    public void updateOrderShouldUpdateAndReturnOrderWhenItExists() {
+        Order order = new Order();
+        order.setClientName("Pedro");
+        order.setDeliveryDate(LocalDate.now());
+        List<OrderItem> items = new ArrayList<>();
+        items.add(new OrderItem("Poma",100));
+        order.setItems(items);
+        order.setId("1");
+
+        when(orderRepository.existsById("1")).thenReturn(true);
+
+        when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Order result = orderService.updateOrder(order, "1");
+        Assertions.assertEquals("Pedro", result.getClientName());
+        Assertions.assertEquals(1, result.getItems().size());
+        Assertions.assertEquals("Poma", result.getItems().get(0).getFruitName());
+        Assertions.assertEquals(100, result.getItems().get(0).getQuantityInKilos());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("1", result.getId());
+
+        verify(orderRepository).existsById("1");
+        verify(orderRepository).save(order);
+    }
+
+    @Test
+    public void updateOrderNotFound() {
+        Order order = new Order();
+        order.setClientName("Pedro");
+        order.setDeliveryDate(LocalDate.now());
+        List<OrderItem> items = new ArrayList<>();
+        items.add(new OrderItem("Poma",100));
+        order.setItems(items);
+        when(orderRepository.existsById("999")).thenReturn(false);
+        RuntimeException exception = Assertions.assertThrows(OrderIdDoesNotExists.class, () -> orderService.updateOrder(order, "999"));
+        verify(orderRepository).existsById("999");
+        verify(orderRepository, never()).save(any(Order.class));
+    }
 }

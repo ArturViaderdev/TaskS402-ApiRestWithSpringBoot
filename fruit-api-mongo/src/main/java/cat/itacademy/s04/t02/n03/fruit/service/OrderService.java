@@ -9,4 +9,5 @@ public interface OrderService {
     Order findById(String id);
     List<Order> readAllOrders();
     Order getOrderById(String id);
+    Order updateOrder(Order order, String id);
 }

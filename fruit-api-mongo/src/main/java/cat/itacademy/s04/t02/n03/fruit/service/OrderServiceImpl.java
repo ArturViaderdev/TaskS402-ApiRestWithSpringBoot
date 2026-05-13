@@ -60,4 +60,14 @@ public class OrderServiceImpl implements OrderService {
         }
         return order.get();
     }
+
+    @Override
+    public Order updateOrder(Order order, String id) {
+        if(!(orderRepository.existsById(id))) {
+            throw new OrderIdDoesNotExists();
+        }
+        order.setId(id);
+        orderRepository.save(order);
+        return order;
+    }
 }
