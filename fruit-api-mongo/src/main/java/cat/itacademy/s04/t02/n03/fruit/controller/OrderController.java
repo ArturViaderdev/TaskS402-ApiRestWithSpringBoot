@@ -31,4 +31,12 @@ public class OrderController {
     public List<Order> getOrders(){
         return orderService.readAllOrders();
     }
+
+    @GetMapping("/orders/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Order getOrderById(@PathVariable String id){
+        Order order = orderService.getOrderById(id);
+
+        return order;
+    }
 }

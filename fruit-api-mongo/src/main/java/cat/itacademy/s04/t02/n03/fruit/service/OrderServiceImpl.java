@@ -2,6 +2,7 @@ package cat.itacademy.s04.t02.n03.fruit.service;
 
 import cat.itacademy.s04.t02.n03.fruit.exception.ClientNameIsEmptyException;
 import cat.itacademy.s04.t02.n03.fruit.exception.FruitsEmptyException;
+import cat.itacademy.s04.t02.n03.fruit.exception.OrderIdDoesNotExists;
 import cat.itacademy.s04.t02.n03.fruit.exception.OrderNotFoundException;
 import cat.itacademy.s04.t02.n03.fruit.model.Order;
 import cat.itacademy.s04.t02.n03.fruit.repository.OrderRepository;
@@ -48,5 +49,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> readAllOrders() {
         return orderRepository.findAll();
+    }
+
+    @Override
+    public Order getOrderById(String id) {
+        Optional<Order> order = orderRepository.findById(id);
+        if(order.isEmpty())
+        {
+            throw new OrderIdDoesNotExists();
+        }
+        return order.get();
     }
 }

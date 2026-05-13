@@ -2,6 +2,7 @@ package cat.itacademy.s04.t02.n03.fruit;
 
 import cat.itacademy.s04.t02.n03.fruit.exception.ClientNameIsEmptyException;
 import cat.itacademy.s04.t02.n03.fruit.exception.FruitsEmptyException;
+import cat.itacademy.s04.t02.n03.fruit.exception.OrderIdDoesNotExists;
 import cat.itacademy.s04.t02.n03.fruit.model.Order;
 import cat.itacademy.s04.t02.n03.fruit.model.OrderItem;
 import cat.itacademy.s04.t02.n03.fruit.repository.OrderRepository;
@@ -113,5 +114,32 @@ public class OrderServiceTest {
         Assertions.assertTrue(result.isEmpty());
         Assertions.assertEquals(0,result.size());
         verify(orderRepository,times(1)).findAll();
+    }
+
+    @Test
+    public void getOrderIdShouldReturnOrder() {
+        Order order = new Order();
+        order.setClientName("Pedro");
+        order.setDeliveryDate(LocalDate.now());
+        List<OrderItem> items = new ArrayList<>();
+        items.add(new OrderItem("Poma",100));
+        order.setItems(items);
+        order.setId("1");
+        when(orderRepository.findById("1")).thenReturn(Optional.of(order));
+        Order result = orderService.getOrderById("1");
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("1", result.getId());
+        Assertions.assertEquals("Pedro", result.getClientName());
+        Assertions.assertEquals(1, result.getItems().size());
+        Assertions.assertEquals("Poma", result.getItems().get(0).getFruitName());
+        Assertions.assertEquals(100, result.getItems().get(0).getQuantityInKilos());
+        verify(orderRepository).findById("1");
+    }
+
+    @Test
+    public void getOrderIdShouldThrowExceptionWhenNotExists() {
+        when(orderRepository.findById("999")).thenReturn(Optional.empty());
+        RuntimeException ex = Assertions.assertThrows(OrderIdDoesNotExists.class, () -> orderService.getOrderById("999"));
+        verify(orderRepository).findById("999");
     }
 }

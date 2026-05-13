@@ -25,12 +25,10 @@ public class  GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    @ExceptionHandler({OrderNotFoundException.class})
+    @ExceptionHandler({OrderNotFoundException.class, OrderIdDoesNotExists.class})
     public ResponseEntity<ErrorResponse> notFoundOrder(RuntimeException ex, WebRequest request) {
         String path = ((ServletWebRequest) request).getRequest().getRequestURI();
         ErrorResponse body = new ErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage(), path);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
-
-
 }

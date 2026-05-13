@@ -8,4 +8,5 @@ public interface OrderService {
     Order createOrder(Order order);
     Order findById(String id);
     List<Order> readAllOrders();
+    Order getOrderById(String id);
 }
