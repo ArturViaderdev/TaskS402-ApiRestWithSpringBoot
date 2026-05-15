@@ -11,5 +11,6 @@ public interface FruitService {
     List<Fruit> readAllFruits(long providerId) throws ProviderNotFound;
     Fruit getFruitById(Long id);
     Fruit updateFruit(Fruit fruit, Long id, Long provider);
+
     void deleteFruit(Long id);
 }

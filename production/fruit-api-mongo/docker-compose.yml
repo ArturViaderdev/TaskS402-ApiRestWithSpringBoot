@@ -1,0 +1,11 @@
+services:
+  mongodbl:
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+    - "27017:27017"
+    volumes:
+    - ./data/db:/data/db
+    build:
+        context: ./build/mongodb
+    network_mode: "host"

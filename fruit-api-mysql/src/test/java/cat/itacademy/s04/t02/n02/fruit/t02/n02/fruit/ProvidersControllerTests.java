@@ -33,8 +33,7 @@ public class ProvidersControllerTests {
 
     @Test
     @Transactional
-    public void addProviderTest() throws Exception
-    {
+    public void addProviderTest() throws Exception {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"name\": \"Frutero\",\n" +
@@ -47,8 +46,7 @@ public class ProvidersControllerTests {
 
     @Test
     @Transactional
-    public void providerNameIsEmpty() throws Exception
-    {
+    public void providerNameIsEmpty() throws Exception {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\":\"\",\n" +
@@ -58,8 +56,7 @@ public class ProvidersControllerTests {
 
     @Test
     @Transactional
-    public void providerNameAlreadyExists() throws Exception
-    {
+    public void providerNameAlreadyExists() throws Exception {
         mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\":\"Frutero\",\n" +
@@ -100,7 +97,7 @@ public class ProvidersControllerTests {
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(put("/providers/{id}",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/providers/{id}", idProvider).contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"name\": \"Frutere\",\n" +
                                 "  \"country\": \"France\"\n" +
@@ -113,7 +110,7 @@ public class ProvidersControllerTests {
     @Test
     @Transactional
     public void updateProviderIdNotFound() throws Exception {
-        mockMvc.perform(put("/providers/{id}","999").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/providers/{id}", "999").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutere\",\n" +
                         "  \"country\": \"France\"\n" +
@@ -122,8 +119,8 @@ public class ProvidersControllerTests {
 
     @Test
     @Transactional
-    public void updateProviderInvalidId() throws Exception{
-        mockMvc.perform(put("/providers/{id}","abc").contentType(MediaType.APPLICATION_JSON)
+    public void updateProviderInvalidId() throws Exception {
+        mockMvc.perform(put("/providers/{id}", "abc").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutere\",\n" +
                         "  \"country\": \"France\"\n" +
@@ -132,7 +129,7 @@ public class ProvidersControllerTests {
 
     @Test
     @Transactional
-    public void updateProviderNameIsEmpty() throws Exception{
+    public void updateProviderNameIsEmpty() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutero\",\n" +
@@ -140,7 +137,7 @@ public class ProvidersControllerTests {
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(put("/providers/{id}",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/providers/{id}", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"\",\n" +
                         "  \"country\": \"France\"\n" +
@@ -162,7 +159,7 @@ public class ProvidersControllerTests {
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(put("/providers/{id}",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/providers/{id}", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutero\",\n" +
                         "  \"country\": \"France\"\n" +
@@ -171,7 +168,7 @@ public class ProvidersControllerTests {
 
     @Test
     @Transactional
-    public void deleteProvider() throws Exception{
+    public void deleteProvider() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutera\",\n" +
@@ -179,12 +176,12 @@ public class ProvidersControllerTests {
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(delete("/providers/{id}",idProvider)).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/providers/{id}", idProvider)).andExpect(status().isNoContent());
     }
 
     @Test
     @Transactional
-    public void deleteProviderHasFruits() throws Exception{
+    public void deleteProviderHasFruits() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutera\",\n" +
@@ -193,25 +190,25 @@ public class ProvidersControllerTests {
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
 
-        mockMvc.perform(post("/fruits").param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/fruits").param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Poma\",\n" +
                         "  \"weightInKilos\": \"200\"\n" +
                         "}"));
 
-        mockMvc.perform(delete("/providers/{id}",idProvider)).andExpect(status().isConflict());
+        mockMvc.perform(delete("/providers/{id}", idProvider)).andExpect(status().isConflict());
     }
 
     @Test
     @Transactional
     public void deleteProviderIdNotFound() throws Exception {
-        mockMvc.perform(delete("/providers/{id}","999")).andExpect(status().isNotFound());
+        mockMvc.perform(delete("/providers/{id}", "999")).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void deleteProviderBadId() throws Exception{
-        mockMvc.perform(delete("/providers/{id}","abc")).andExpect(status().isBadRequest());
+    public void deleteProviderBadId() throws Exception {
+        mockMvc.perform(delete("/providers/{id}", "abc")).andExpect(status().isBadRequest());
     }
 
 }

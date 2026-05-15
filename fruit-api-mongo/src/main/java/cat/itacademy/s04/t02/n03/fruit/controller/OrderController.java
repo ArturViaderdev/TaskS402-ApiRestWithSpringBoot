@@ -28,13 +28,13 @@ public class OrderController {
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<Order> getOrders(){
+    public List<Order> getOrders() {
         return orderService.readAllOrders();
     }
 
     @GetMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Order getOrderById(@PathVariable String id){
+    public Order getOrderById(@PathVariable String id) {
         Order order = orderService.getOrderById(id);
 
         return order;
@@ -49,7 +49,7 @@ public class OrderController {
 
     @DeleteMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteOrder(@PathVariable String id){
+    public ResponseEntity<Void> deleteOrder(@PathVariable String id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
 

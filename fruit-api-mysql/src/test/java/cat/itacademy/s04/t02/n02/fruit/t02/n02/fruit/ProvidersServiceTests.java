@@ -1,4 +1,5 @@
 package cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit;
+
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.ProviderHasFruits;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.ProviderNameAlreadyExists;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.ProviderNameIsEmpty;
@@ -33,19 +34,17 @@ public class ProvidersServiceTests {
     private FruitRepository fruitRepository;
 
     @Test
-    public void createProviderShouldThrowExceptionWhenNameIsEmpty()
-    {
+    public void createProviderShouldThrowExceptionWhenNameIsEmpty() {
         Provider provider = new Provider();
         provider.setName("");
         provider.setCountry("Spain");
         Assertions.assertThrows(ProviderNameIsEmpty.class, () -> providerService.createProvider(provider));
-        verify(providerRepository,never()).save(any(Provider.class));
-        verify(providerRepository,never()).findByName(anyString());
+        verify(providerRepository, never()).save(any(Provider.class));
+        verify(providerRepository, never()).findByName(anyString());
     }
 
     @Test
-    public void createProviderShouldThrowExceptionWhenNameAlreadyExists()
-    {
+    public void createProviderShouldThrowExceptionWhenNameAlreadyExists() {
         Provider provider = new Provider();
         provider.setName("Frutero");
         provider.setCountry("Spain");
@@ -58,7 +57,7 @@ public class ProvidersServiceTests {
         Assertions.assertThrows(ProviderNameAlreadyExists.class, () -> providerService.createProvider(provider));
 
         verify(providerRepository).findByName("Frutero");
-        verify(providerRepository,never()).save(any(Provider.class));
+        verify(providerRepository, never()).save(any(Provider.class));
 
     }
 
@@ -67,7 +66,7 @@ public class ProvidersServiceTests {
         Provider provider = new Provider();
         provider.setName("Vendefrutas");
         provider.setCountry("Spain");
-        Long providerId=1L;
+        Long providerId = 1L;
         Provider savedProvider = new Provider();
         savedProvider.setName("Vendefrutas");
         savedProvider.setCountry("Spain");
@@ -121,8 +120,7 @@ public class ProvidersServiceTests {
     }
 
     @Test
-    public void deleteProviderShouldThrowExceptionWhenHavesFruits()
-    {
+    public void deleteProviderShouldThrowExceptionWhenHavesFruits() {
         Provider provider = new Provider();
         Long providerId = 1L;
         provider.setId(providerId);
@@ -139,13 +137,12 @@ public class ProvidersServiceTests {
         Assertions.assertThrows(ProviderHasFruits.class, () -> providerService.deleteProvider(providerId));
         verify(providerRepository).findById(providerId);
         verify(fruitRepository).findByProviderId(providerId);
-        verify(providerRepository,never()).deleteById(anyLong());
+        verify(providerRepository, never()).deleteById(anyLong());
     }
 
     @Test
-    public void updateProviderShouldReturnProvider()
-    {
-        Long providerId=1L;
+    public void updateProviderShouldReturnProvider() {
+        Long providerId = 1L;
         Provider existing = new Provider();
         existing.setId(1L);
         existing.setName("Frutero");
@@ -157,17 +154,16 @@ public class ProvidersServiceTests {
 
         when(providerRepository.findById(providerId)).thenReturn(Optional.of(existing));
         when(providerRepository.save(any(Provider.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        Provider result = providerService.updateProvider(updated,providerId);
+        Provider result = providerService.updateProvider(updated, providerId);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(providerId,result.getId());
-        Assertions.assertEquals(updated.getName(),result.getName());
-        Assertions.assertEquals(updated.getCountry(),result.getCountry());
+        Assertions.assertEquals(providerId, result.getId());
+        Assertions.assertEquals(updated.getName(), result.getName());
+        Assertions.assertEquals(updated.getCountry(), result.getCountry());
     }
 
     @Test
-    public void updateProviderShouldThrowExceptionWhenNameAlreadyExists()
-    {
-        Long providerId=1L;
+    public void updateProviderShouldThrowExceptionWhenNameAlreadyExists() {
+        Long providerId = 1L;
         Provider existing = new Provider();
         existing.setId(1L);
         existing.setName("Frutero");
@@ -185,16 +181,15 @@ public class ProvidersServiceTests {
         when((providerRepository).findById(providerId)).thenReturn(Optional.of(existing));
         when((providerRepository).findByName("Frutero")).thenReturn(Optional.of(duplicated));
 
-        Assertions.assertThrows(ProviderNameAlreadyExists.class,()->providerService.updateProvider(updated,providerId));
+        Assertions.assertThrows(ProviderNameAlreadyExists.class, () -> providerService.updateProvider(updated, providerId));
 
         verify(providerRepository).findById(providerId);
         verify(providerRepository).findByName("Frutero");
-        verify(providerRepository,never()).save(any(Provider.class));
+        verify(providerRepository, never()).save(any(Provider.class));
     }
 
     @Test
-    public void updateProviderShouldThrowExceptionWhenIdIsNotFound()
-    {
+    public void updateProviderShouldThrowExceptionWhenIdIsNotFound() {
         Provider provider = new Provider();
         provider.setName("Frutero");
         provider.setCountry("Spain");

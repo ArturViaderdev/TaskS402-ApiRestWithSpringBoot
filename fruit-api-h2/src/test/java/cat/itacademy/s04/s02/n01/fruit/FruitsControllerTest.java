@@ -1,6 +1,5 @@
 package cat.itacademy.s04.s02.n01.fruit;
 
-import cat.itacademy.s04.s02.n01.fruit.service.FruitService;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

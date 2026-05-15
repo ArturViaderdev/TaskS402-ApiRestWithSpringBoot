@@ -36,8 +36,8 @@ public class ProviderController {
     @PutMapping("/providers/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Provider> updateProvider(@RequestBody Provider provider, @PathVariable String id) {
-            Provider savedProvider = providerService.updateProvider(provider, Long.parseLong(id));
-            return ResponseEntity.ok(savedProvider);
+        Provider savedProvider = providerService.updateProvider(provider, Long.parseLong(id));
+        return ResponseEntity.ok(savedProvider);
     }
 
     @DeleteMapping("/providers/{id}")

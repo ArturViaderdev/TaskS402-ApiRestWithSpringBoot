@@ -55,7 +55,7 @@ public class FruitRepositoryTests {
         Assertions.assertTrue(result.isPresent());
         Assertions.assertEquals("Poma", result.get().getName());
         Assertions.assertEquals(200, result.get().getWeightInKilos());
-        Assertions.assertEquals(savedProvider,result.get().getProvider());
+        Assertions.assertEquals(savedProvider, result.get().getProvider());
     }
 
     @Test
@@ -81,9 +81,9 @@ public class FruitRepositoryTests {
         fruitRepository.saveAll(List.of(fruit, secondFruit));
         List<Fruit> result = fruitRepository.findByProviderId(savedProvider.getId());
         Assertions.assertEquals(2, result.size());
-        List<Fruit> compareList = List.of(fruit,secondFruit);
+        List<Fruit> compareList = List.of(fruit, secondFruit);
 
-        Assertions.assertEquals(result,compareList);
+        Assertions.assertEquals(result, compareList);
     }
 
     @Test

@@ -14,34 +14,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ProviderServiceImpl implements ProviderService{
+public class ProviderServiceImpl implements ProviderService {
     private final ProviderRepository providerRepository;
     private final FruitRepository fruitRepository;
 
-    public ProviderServiceImpl(ProviderRepository providerRepository, FruitRepository fruitRepository)
-    {
+    public ProviderServiceImpl(ProviderRepository providerRepository, FruitRepository fruitRepository) {
         this.providerRepository = providerRepository;
         this.fruitRepository = fruitRepository;
     }
 
-    private Provider saveProvider(Provider provider, boolean update)
-    {
-        if(provider.getName().isEmpty())
-        {
+    private Provider saveProvider(Provider provider, boolean update) {
+        if (provider.getName().isEmpty()) {
             throw new ProviderNameIsEmpty();
         }
-        Optional<Provider> providerName= providerRepository.findByName(provider.getName());
-        if((providerName.isPresent()))
-        {
-            if(update)
-            {
-                if(!(providerName.get().getId().equals(provider.getId())))
-                {
+        Optional<Provider> providerName = providerRepository.findByName(provider.getName());
+        if ((providerName.isPresent())) {
+            if (update) {
+                if (!(providerName.get().getId().equals(provider.getId()))) {
                     throw new ProviderNameAlreadyExists();
                 }
-            }
-            else
-            {
+            } else {
                 throw new ProviderNameAlreadyExists();
             }
         }
@@ -50,31 +42,28 @@ public class ProviderServiceImpl implements ProviderService{
 
     @Override
     public Provider createProvider(Provider provider) throws ProviderNameIsEmpty, ProviderNameAlreadyExists {
-        return saveProvider(provider,false);
+        return saveProvider(provider, false);
 
     }
 
     @Override
     public Provider updateProvider(Provider provider, Long idProvider) throws ProviderNotFound {
         Optional<Provider> existProvider = providerRepository.findById(idProvider);
-        if(existProvider.isEmpty())
-        {
+        if (existProvider.isEmpty()) {
             throw new ProviderNotFound();
         }
         provider.setId(existProvider.get().getId());
-        return saveProvider(provider,true);
+        return saveProvider(provider, true);
     }
 
     @Override
     public void deleteProvider(Long idProvider) throws ProviderNotFound, ProviderHasFruits {
         Optional<Provider> existProvider = providerRepository.findById(idProvider);
-        if(existProvider.isEmpty())
-        {
+        if (existProvider.isEmpty()) {
             throw new ProviderNotFound();
         }
         List<Fruit> fruits = fruitRepository.findByProviderId(idProvider);
-        if(!(fruits.isEmpty()))
-        {
+        if (!(fruits.isEmpty())) {
             throw new ProviderHasFruits();
         }
         providerRepository.deleteById(idProvider);

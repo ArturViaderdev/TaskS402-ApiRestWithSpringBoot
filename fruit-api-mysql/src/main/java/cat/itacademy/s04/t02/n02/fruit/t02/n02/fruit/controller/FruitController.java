@@ -14,47 +14,46 @@ import java.util.List;
 public class FruitController {
     private final FruitService fruitService;
 
-    public FruitController(FruitService fruitService)
-    {
+    public FruitController(FruitService fruitService) {
         this.fruitService = fruitService;
     }
 
     @GetMapping("/fruits")
     @ResponseStatus(HttpStatus.OK)
-    public List<Fruit> getFruits(@RequestParam(name="providerId",defaultValue = "") String provider){
+    public List<Fruit> getFruits(@RequestParam(name = "providerId", defaultValue = "") String provider) {
         return fruitService.readAllFruits(Long.parseLong(provider));
     }
 
     @GetMapping("/fruits/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Fruit getFruitById(@PathVariable Long id){
-            Fruit fruit = fruitService.getFruitById(id);
+    public Fruit getFruitById(@PathVariable Long id) {
+        Fruit fruit = fruitService.getFruitById(id);
 
-            return fruit;
+        return fruit;
     }
 
     @PostMapping("/fruits")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Fruit> postFruits(@RequestBody Fruit fruit, @RequestParam(name="providerId",defaultValue = "") String provider) {
-            Fruit savedFruit = fruitService.createFruit(fruit,Long.parseLong(provider));
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedFruit.getId()).toUri();
-            return ResponseEntity.created(location).body(savedFruit);
+    public ResponseEntity<Fruit> postFruits(@RequestBody Fruit fruit, @RequestParam(name = "providerId", defaultValue = "") String provider) {
+        Fruit savedFruit = fruitService.createFruit(fruit, Long.parseLong(provider));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedFruit.getId()).toUri();
+        return ResponseEntity.created(location).body(savedFruit);
     }
 
     @PutMapping("/fruits/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Fruit> updateFruit(@RequestBody Fruit fruit,@PathVariable Long id,@RequestParam(name="providerId",defaultValue = "")Long provider) {
+    public ResponseEntity<Fruit> updateFruit(@RequestBody Fruit fruit, @PathVariable Long id, @RequestParam(name = "providerId", defaultValue = "") Long provider) {
 
-            Fruit updatedFruit = fruitService.updateFruit(fruit,id,provider);
-            return ResponseEntity.ok(updatedFruit);
+        Fruit updatedFruit = fruitService.updateFruit(fruit, id, provider);
+        return ResponseEntity.ok(updatedFruit);
 
     }
 
     @DeleteMapping("/fruits/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteFruit(@PathVariable Long id){
-            fruitService.deleteFruit(id);
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteFruit(@PathVariable Long id) {
+        fruitService.deleteFruit(id);
+        return ResponseEntity.noContent().build();
 
     }
 }

@@ -1,0 +1,3 @@
+CREATE DATABASE IF NOT EXISTS fruits_test;
+GRANT ALL PRIVILEGES ON fruits_test.* TO 'devs'@'%';
+FLUSH PRIVILEGES;

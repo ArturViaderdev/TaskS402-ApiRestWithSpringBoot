@@ -23,40 +23,36 @@ public class ProviderRepositoryTests {
     private ProviderRepository providerRepository;
 
     @Test
-    public void newProviderTest()
-    {
+    public void newProviderTest() {
         Provider provider = new Provider();
         provider.setName("Frutero");
         provider.setCountry("Spain");
         Provider savedProvider = providerRepository.save(provider);
         Assertions.assertNotNull(savedProvider.getId());
-        Assertions.assertEquals(savedProvider.getName(),"Frutero");
-        Assertions.assertEquals(savedProvider.getCountry(),"Spain");
+        Assertions.assertEquals(savedProvider.getName(), "Frutero");
+        Assertions.assertEquals(savedProvider.getCountry(), "Spain");
     }
 
     @Test
-    public void findProviderByIdTest()
-    {
+    public void findProviderByIdTest() {
         Provider provider = new Provider();
         provider.setName("Frutero");
         provider.setCountry("Spain");
         Provider savedProvider = providerRepository.save(provider);
         Optional<Provider> readed = providerRepository.findById(savedProvider.getId());
         Assertions.assertTrue(readed.isPresent());
-        Assertions.assertTrue(readed.get().getName() . equals(provider.getName()));
+        Assertions.assertTrue(readed.get().getName().equals(provider.getName()));
         Assertions.assertTrue(readed.get().getCountry().equals(provider.getCountry()));
     }
 
     @Test
-    public void findProvider4IdDoesNotExists()
-    {
+    public void findProvider4IdDoesNotExists() {
         Optional<Provider> readed = providerRepository.findById(999L);
         Assertions.assertTrue(readed.isEmpty());
     }
 
     @Test
-    public void deleteById()
-    {
+    public void deleteById() {
         Provider provider = new Provider();
         provider.setName("Frutero");
         provider.setCountry("Spain");
@@ -67,8 +63,7 @@ public class ProviderRepositoryTests {
     }
 
     @Test
-    public void findProviderByName()
-    {
+    public void findProviderByName() {
         Provider provider = new Provider();
         provider.setName("Frutero");
         provider.setCountry("Spain");
@@ -77,12 +72,11 @@ public class ProviderRepositoryTests {
 
         Optional<Provider> readed = providerRepository.findByName("Frutero");
         Assertions.assertTrue(readed.isPresent());
-        Assertions.assertEquals(readed.get().getName(),"Frutero");
+        Assertions.assertEquals(readed.get().getName(), "Frutero");
     }
 
     @Test
-    public void findProviderByNameNotFound()
-    {
+    public void findProviderByNameNotFound() {
         Optional<Provider> readed = providerRepository.findByName("Caja");
         Assertions.assertTrue(readed.isEmpty());
     }

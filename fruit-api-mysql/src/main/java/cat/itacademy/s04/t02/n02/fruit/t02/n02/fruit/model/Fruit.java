@@ -8,7 +8,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name="fruits")
+@Table(name = "fruits")
 public class Fruit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +30,7 @@ public class Fruit {
         this.provider = provider;
     }
 
-    public Fruit()
-    {
+    public Fruit() {
 
     }
 

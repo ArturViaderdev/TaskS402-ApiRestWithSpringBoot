@@ -10,7 +10,10 @@ import java.util.List;
 
 public interface ProviderService {
     Provider createProvider(Provider provider) throws ProviderNameIsEmpty, ProviderNameAlreadyExists;
+
     Provider updateProvider(Provider provider, Long idProvider) throws ProviderNotFound;
+
     void deleteProvider(Long idProvider) throws ProviderNotFound, ProviderHasFruits;
+
     List<Provider> getProviders();
 }

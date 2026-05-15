@@ -19,18 +19,15 @@ public class OrderServiceImpl implements OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order createOrder(Order order)
-    {
-        if(order.getClientName().isEmpty())
-        {
+    public Order createOrder(Order order) {
+        if (order.getClientName().isEmpty()) {
             throw new ClientNameIsEmptyException();
         }
-        if(order.getItems().size()==0)
-        {
+        if (order.getItems().size() == 0) {
             throw new FruitsEmptyException();
         }
         Order orderToSave = new Order();
-        orderToSave.setClientName( order.getClientName());
+        orderToSave.setClientName(order.getClientName());
         orderToSave.setDeliveryDate(order.getDeliveryDate());
         orderToSave.setItems(order.getItems());
         return orderRepository.save(orderToSave);
@@ -39,8 +36,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(String id) {
         Optional<Order> order = orderRepository.findById(id);
-        if(order.isEmpty())
-        {
+        if (order.isEmpty()) {
             throw new OrderNotFoundException();
         }
         return order.get();
@@ -54,8 +50,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderById(String id) {
         Optional<Order> order = orderRepository.findById(id);
-        if(order.isEmpty())
-        {
+        if (order.isEmpty()) {
             throw new OrderIdDoesNotExists();
         }
         return order.get();
@@ -63,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order updateOrder(Order order, String id) {
-        if(!(orderRepository.existsById(id))) {
+        if (!(orderRepository.existsById(id))) {
             throw new OrderIdDoesNotExists();
         }
         order.setId(id);
@@ -73,8 +68,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteOrder(String id) {
-        if(!(orderRepository.existsById(id)))
-        {
+        if (!(orderRepository.existsById(id))) {
             throw new OrderIdDoesNotExists();
         }
         orderRepository.deleteById(id);

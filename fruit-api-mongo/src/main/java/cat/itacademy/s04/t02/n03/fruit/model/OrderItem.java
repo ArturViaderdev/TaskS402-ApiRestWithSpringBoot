@@ -9,8 +9,7 @@ public class OrderItem {
     public OrderItem() {
     }
 
-    public OrderItem(String fruitName, int quantityInKilos)
-    {
+    public OrderItem(String fruitName, int quantityInKilos) {
         this.fruitName = fruitName;
         this.quantityInKilos = quantityInKilos;
     }

@@ -34,20 +34,19 @@ public class FruitsControllerTests {
     @Transactional
     public void getFruitsProviderNotFound() throws Exception {
 
-        mockMvc.perform(get("/fruits").param("providerId","999")).andExpect(status().isNotFound());
+        mockMvc.perform(get("/fruits").param("providerId", "999")).andExpect(status().isNotFound());
     }
 
 
     @Test
     @Transactional
-    public void getFruitsProviderInputMissmatch() throws Exception{
-        mockMvc.perform(get("/fruits").param("providerId","abc")).andExpect(status().isBadRequest());
+    public void getFruitsProviderInputMissmatch() throws Exception {
+        mockMvc.perform(get("/fruits").param("providerId", "abc")).andExpect(status().isBadRequest());
     }
 
     @Test
     @Transactional
-    public void addFruitsToProvider() throws Exception
-    {
+    public void addFruitsToProvider() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\":\"Frutero\",\n" +
@@ -55,7 +54,7 @@ public class FruitsControllerTests {
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String id = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(post("/fruits").param("providerId",id).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/fruits").param("providerId", id).contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"name\": \"Poma\",\n" +
                                 "  \"weightInKilos\": \"200\"\n" +
@@ -68,21 +67,19 @@ public class FruitsControllerTests {
 
     @Test
     @Transactional
-    public void addFruitsProviderNotFound() throws Exception
-    {
-        mockMvc.perform(post("/fruits").param("providerId","999").contentType(MediaType.APPLICATION_JSON)
-                        .content("{\n" +
-                                "  \"name\": \"Poma\",\n" +
-                                "  \"weightInKilos\": \"200\"\n" +
-                                "}")).andExpect(status().isNotFound());
+    public void addFruitsProviderNotFound() throws Exception {
+        mockMvc.perform(post("/fruits").param("providerId", "999").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Poma\",\n" +
+                        "  \"weightInKilos\": \"200\"\n" +
+                        "}")).andExpect(status().isNotFound());
     }
 
 
     @Test
     @Transactional
-    public void addFruitsProviderMissmatch() throws Exception
-    {
-        mockMvc.perform(post("/fruits").param("providerId","abc").contentType(MediaType.APPLICATION_JSON)
+    public void addFruitsProviderMissmatch() throws Exception {
+        mockMvc.perform(post("/fruits").param("providerId", "abc").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Poma\",\n" +
                         "  \"weightInKilos\": \"200\"\n" +
@@ -92,8 +89,7 @@ public class FruitsControllerTests {
 
     @Test
     @Transactional
-    public void getFruitsTest() throws Exception
-    {
+    public void getFruitsTest() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutero\",\n" +
@@ -102,18 +98,18 @@ public class FruitsControllerTests {
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
 
-        mockMvc.perform(post("/fruits").param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/fruits").param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Poma\",\n" +
                         "  \"weightInKilos\": \"200\"\n" +
                         "}"));
-        mockMvc.perform(post("/fruits").param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/fruits").param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Pera\",\n" +
                         "  \"weightInKilos\": \"100\"\n" +
                         "}"));
 
-        mockMvc.perform(get("/fruits").param("providerId",idProvider)).andExpect(status().isOk())
+        mockMvc.perform(get("/fruits").param("providerId", idProvider)).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$.length()").value(2));
     }
@@ -131,7 +127,7 @@ public class FruitsControllerTests {
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
 
-        result = mockMvc.perform(post("/fruits").param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+        result = mockMvc.perform(post("/fruits").param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Poma\",\n" +
                         "  \"weightInKilos\": \"200\"\n" +
@@ -165,7 +161,7 @@ public class FruitsControllerTests {
 
     @Test
     @Transactional
-    public void updateFruitTest() throws Exception{
+    public void updateFruitTest() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutero\",\n" +
@@ -174,14 +170,14 @@ public class FruitsControllerTests {
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
 
-        result = mockMvc.perform(post("/fruits").param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+        result = mockMvc.perform(post("/fruits").param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Poma\",\n" +
                         "  \"weightInKilos\": \"200\"\n" +
                         "}")).andReturn();
         response = result.getResponse().getContentAsString();
         String id = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(put("/fruits/{id}",id).param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/fruits/{id}", id).param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"name\": \"Manzana\",\n" +
                                 "  \"weightInKilos\": \"300\"\n" +
@@ -214,18 +210,18 @@ public class FruitsControllerTests {
                         "}")).andReturn();
         response = result.getResponse().getContentAsString();
         String id = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(delete("fruits{id}",id)).andExpect(status().isNoContent());
+        mockMvc.perform(delete("/fruits/{id}", id)).andExpect(status().isNoContent());
     }
 
     @Test
     @Transactional
-    public void deleteFruitNotFound() throws Exception{
-        mockMvc.perform(delete("fruits{id}","999")).andExpect(status().isNotFound());
+    public void deleteFruitNotFound() throws Exception {
+        mockMvc.perform(delete("/fruits/{id}", "999")).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateFruitNotFound() throws Exception{
+    public void updateFruitNotFound() throws Exception {
         MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Frutero\",\n" +
@@ -233,7 +229,7 @@ public class FruitsControllerTests {
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String idProvider = JsonPath.parse(response).read("$.id").toString();
-        mockMvc.perform(put("/fruits/{id}",999).param("providerId",idProvider).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/fruits/{id}", 999).param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Manzana\",\n" +
                         "  \"weightInKilos\": \"300\"\n" +

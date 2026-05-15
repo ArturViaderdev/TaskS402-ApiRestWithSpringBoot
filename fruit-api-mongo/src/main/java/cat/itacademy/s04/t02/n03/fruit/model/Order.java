@@ -7,13 +7,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-@Document(collection="Order")
+@Document(collection = "Order")
 public class Order {
     @Id
     private String id;
     private String clientName;
     private LocalDate deliveryDate;
     private List<OrderItem> items;
+
     public String getId() {
         return id;
     }
