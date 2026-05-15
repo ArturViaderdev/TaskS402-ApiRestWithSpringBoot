@@ -1,9 +1,10 @@
 # Task S402 - API Rest with Spring Boot
-# Description
+
+## Description
 
 In this assignment, you will develop three independent Spring Boot applications, each with a REST API that implements a complete CRUD (Create, Read, Update, Delete) over different entities. You will work with three different databases: H2, MySQL, and MongoDB.
 
-Through these exercises, you will learn how to: [web:10][web:13]
+Through these exercises, you will learn how to:
 
 - Create REST APIs using Spring Boot.
 - Manage data persistence with Spring Data JPA and Spring Data MongoDB.
@@ -16,6 +17,587 @@ Through these exercises, you will learn how to: [web:10][web:13]
 - Introduce the use of DTOs and validate input data with validation annotations.
 - Create a Dockerfile to package the application into a Docker image ready for production environments.
 - Configure the database connection through environment variables.
+
+## 🛠 Technologies
+- Java
+
+##    Project Structure
+````bash
+├── fruit-api-h2
+│   ├── mvnw
+│   ├── mvnw.cmd
+│   ├── pom.xml
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── cat
+│       │   │       └── itacademy
+│       │   │           └── s04
+│       │   │               └── s02
+│       │   │                   └── n01
+│       │   │                       └── fruit
+│       │   │                           ├── controller
+│       │   │                           │   └── FruitController.java
+│       │   │                           ├── exception
+│       │   │                           │   ├── ErrorResponse.java
+│       │   │                           │   └── GlobalExceptionHandler.java
+│       │   │                           ├── FruitApiH2Application.java
+│       │   │                           ├── model
+│       │   │                           │   └── Fruit.java
+│       │   │                           ├── repository
+│       │   │                           │   └── FruitRepository.java
+│       │   │                           └── service
+│       │   │                               ├── FruitServiceImpl.java
+│       │   │                               └── FruitService.java
+│       │   └── resources
+│       │       └── application.properties
+│       └── test
+│           └── java
+│               └── cat
+│                   └── itacademy
+│                       └── s04
+│                           └── s02
+│                               └── n01
+│                                   └── fruit
+│                                       ├── FruitRepositoryTest.java
+│                                       ├── FruitsControllerTest.java
+│                                       └── FruitsServiceImlTest.java
+├── fruit-api-mongo
+│   ├── mvnw
+│   ├── mvnw.cmd
+│   ├── pom.xml
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── cat
+│       │   │       └── itacademy
+│       │   │           └── s04
+│       │   │               └── t02
+│       │   │                   └── n03
+│       │   │                       └── fruit
+│       │   │                           ├── controller
+│       │   │                           │   └── OrderController.java
+│       │   │                           ├── exception
+│       │   │                           │   ├── ClientNameIsEmptyException.java
+│       │   │                           │   ├── ErrorResponse.java
+│       │   │                           │   ├── FruitsEmptyException.java
+│       │   │                           │   ├── GlobalExceptionHandler.java
+│       │   │                           │   ├── OrderIdDoesNotExists.java
+│       │   │                           │   └── OrderNotFoundException.java
+│       │   │                           ├── FruitApiMongoApplication.java
+│       │   │                           ├── model
+│       │   │                           │   ├── OrderItem.java
+│       │   │                           │   └── Order.java
+│       │   │                           ├── repository
+│       │   │                           │   └── OrderRepository.java
+│       │   │                           └── service
+│       │   │                               ├── OrderServiceImpl.java
+│       │   │                               └── OrderService.java
+│       │   └── resources
+│       │       ├── application.properties
+│       │       └── application-test.properties
+│       └── test
+│           └── java
+│               └── cat
+│                   └── itacademy
+│                       └── s04
+│                           └── t02
+│                               └── n03
+│                                   └── fruit
+│                                       ├── FruitApiMongoApplicationTests.java
+│                                       ├── OrderControllerTest.java
+│                                       ├── OrderRepositoryTest.java
+│                                       └── OrderServiceTest.java
+├── fruit-api-mysql
+│   ├── mvnw
+│   ├── mvnw.cmd
+│   ├── pom.xml
+│   └── src
+│       ├── main
+│       │   ├── java
+│       │   │   └── cat
+│       │   │       └── itacademy
+│       │   │           └── s04
+│       │   │               └── t02
+│       │   │                   └── n02
+│       │   │                       └── fruit
+│       │   │                           └── t02
+│       │   │                               └── n02
+│       │   │                                   └── fruit
+│       │   │                                       ├── controller
+│       │   │                                       │   ├── FruitController.java
+│       │   │                                       │   └── ProviderController.java
+│       │   │                                       ├── exception
+│       │   │                                       │   ├── ErrorResponse.java
+│       │   │                                       │   ├── FruitIdDoesNotExists.java
+│       │   │                                       │   ├── FruitNameIsEmpty.java
+│       │   │                                       │   ├── GlobalExceptionHandler.java
+│       │   │                                       │   ├── ProviderHasFruits.java
+│       │   │                                       │   ├── ProviderNameAlreadyExists.java
+│       │   │                                       │   ├── ProviderNameIsEmpty.java
+│       │   │                                       │   └── ProviderNotFound.java
+│       │   │                                       ├── FruitApiMysqlApplication.java
+│       │   │                                       ├── model
+│       │   │                                       │   ├── Fruit.java
+│       │   │                                       │   └── Provider.java
+│       │   │                                       ├── repository
+│       │   │                                       │   ├── FruitRepository.java
+│       │   │                                       │   └── ProviderRepository.java
+│       │   │                                       └── service
+│       │   │                                           ├── FruitServiceImpl.java
+│       │   │                                           ├── FruitService.java
+│       │   │                                           ├── ProviderServiceImpl.java
+│       │   │                                           └── ProviderService.java
+│       │   └── resources
+│       │       ├── application.properties
+│       │       └── application-test.properties
+│       └── test
+│           └── java
+│               └── cat
+│                   └── itacademy
+│                       └── s04
+│                           └── t02
+│                               └── n02
+│                                   └── fruit
+│                                       └── t02
+│                                           └── n02
+│                                               └── fruit
+│                                                   ├── FruitRepositoryTests.java
+│                                                   ├── FruitsControllerTests.java
+│                                                   ├── FruitsServiceTests.java
+│                                                   ├── ProviderRepositoryTests.java
+│                                                   ├── ProvidersControllerTests.java
+│                                                   └── ProvidersServiceTests.java
+├── production
+│   ├── fruit-api-h2
+│   │   └── fruit-api-h2-0.0.1-SNAPSHOT.jar
+│   ├── fruit-api-mongo
+│   │   ├── build
+│   │   │   └── mongodb
+│   │   │       └── Dockerfile
+│   │   ├── docker-compose.yml
+│   │   └── fruit-api-mongo-0.0.1-SNAPSHOT.jar
+│   └── fruit-api-mysql
+│       ├── build
+│       │   └── mysql
+│       │       ├── Dockerfile
+│       │       ├── mysqld.cnf
+│       │       └── seconddatabase.sql
+│       ├── docker-compose.yml
+│       └── fruit-api-mysql-0.0.1-SNAPSHOT.jar
+└── README.md
+````
+
+## Execution
+
+Enter the `production` directory and then the subdirectory of the desired project.
+
+The projects include a Docker setup to host the database. In the case of H2, there is no Docker setup because it runs in memory.
+
+Open Docker with:
+
+```bash
+docker compose up -d
+```
+
+Run the JAR file with:
+
+```bash
+java -jar your-jar-name.jar
+```
+
+# Fruit API Endpoint Documentation
+
+This document describes the REST endpoints proposed in the assignment for the three Spring Boot projects. The endpoint design follows common REST conventions: collection-oriented resource names, standard HTTP methods, and appropriate status codes for CRUD operations.
+
+## General conventions
+
+- Base format: JSON request and response bodies are expected for create and update operations, which aligns with common Spring Boot REST API practice.
+- Resource naming: plural nouns such as `/fruits`, `/providers`, and `/orders` are consistent with REST naming guidelines.
+- Common success codes: `200 OK` for successful reads and updates, `201 Created` for successful creations, and `204 No Content` for successful deletions are standard CRUD patterns.
+- Common error codes: `400 Bad Request` is used for invalid input, while `404 Not Found` is used when the requested resource does not exist.
+
+
+## Level 1: H2 fruit stock API
+
+This project manages fruit stock using an H2 in-memory database and a REST API built with Spring Boot.
+
+### Data model
+
+| Entity | Fields |
+| :-- | :-- |
+| `Fruit` | `id: Long`, `name: String`, `weightInKilos: int` |
+
+### Endpoints
+
+#### POST `/fruits`
+
+Creates a new fruit record.
+
+**Request body**
+
+```json
+{
+  "name": "Apple",
+  "weightInKilos": 12
+}
+```
+
+**Success response**
+
+- `201 Created` when the fruit is stored successfully.
+
+**Error responses**
+
+- `400 Bad Request` when `name` is blank or `weightInKilos` is invalid.
+
+
+#### GET `/fruits`
+
+Returns all registered fruits.
+
+**Success response**
+
+- `200 OK` with a JSON array of fruits.
+- If there are no fruits, the response should still be `200 OK` with an empty array.
+
+**Example response**
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Apple",
+    "weightInKilos": 12
+  },
+  {
+    "id": 2,
+    "name": "Banana",
+    "weightInKilos": 8
+  }
+]
+```
+
+
+#### GET `/fruits/{id}`
+
+Returns one fruit by its identifier.
+
+**Path parameter**
+
+- `id`: fruit identifier.
+
+**Success response**
+
+- `200 OK` with the fruit details when the ID exists.
+
+**Error responses**
+
+- `404 Not Found` when no fruit matches the provided ID.
+
+
+#### PUT `/fruits/{id}`
+
+Updates an existing fruit.
+
+**Path parameter**
+
+- `id`: fruit identifier.
+
+**Request body**
+
+```json
+{
+  "name": "Green Apple",
+  "weightInKilos": 14
+}
+```
+
+**Success response**
+
+- `200 OK` with the updated fruit.
+
+**Error responses**
+
+- `400 Bad Request` when the request body is invalid.
+- `404 Not Found` when the fruit ID does not exist.
+
+
+#### DELETE `/fruits/{id}`
+
+Deletes a fruit by its identifier.
+
+**Path parameter**
+
+- `id`: fruit identifier.
+
+**Success response**
+
+- `204 No Content` when the fruit is deleted successfully.
+
+**Error responses**
+
+- `404 Not Found` when the fruit ID does not exist.
+
+
+## Level 2: MySQL fruit and provider API
+
+This project extends the previous API by adding providers and persisting the data in MySQL, while keeping the Level 1 fruit endpoints available.
+
+### Data model
+
+| Entity | Fields |
+| :-- | :-- |
+| `Provider` | `id: Long`, `name: String`, `country: String` |
+| `Fruit` | `id: Long`, `name: String`, `weightInKilos: int`, `provider: Provider` |
+
+The relationship between `Fruit` and `Provider` is a typical parent reference and can be modeled with JPA using `@ManyToOne`.
+
+### Provider endpoints
+
+#### POST `/providers`
+
+Creates a new provider.
+
+**Request body**
+
+```json
+{
+  "name": "Fresh Iberia",
+  "country": "Spain"
+}
+```
+
+**Success response**
+
+- `201 Created` when the provider is created successfully.
+
+**Error responses**
+
+- `400 Bad Request` when the provider name is blank or duplicated according to the business rules described in the assignment.
+
+
+#### GET `/providers`
+
+Returns all providers.[^2][^3]
+
+**Success response**
+
+- `200 OK` with a JSON array of providers.
+
+
+#### PUT `/providers/{id}`
+
+Updates a provider.
+
+**Path parameter**
+
+- `id`: provider identifier.
+
+**Request body**
+
+```json
+{
+  "name": "Fresh Iberia Group",
+  "country": "Spain"
+}
+```
+
+**Success response**
+
+- `200 OK` with the updated provider.
+
+**Error responses**
+
+- `400 Bad Request` when the provider name is blank or duplicated.
+- `404 Not Found` when the provider ID does not exist.
+
+
+#### DELETE `/providers/{id}`
+
+Deletes a provider.[^2][^3]
+
+**Path parameter**
+
+- `id`: provider identifier.
+
+**Success response**
+
+- `204 No Content` when the provider is deleted successfully and has no associated fruits.
+
+**Error responses**
+
+- `400 Bad Request` when the provider still has associated fruits and therefore cannot be removed under the assignment rules.
+- `404 Not Found` when the provider ID does not exist.
+
+
+### Fruit endpoints in Level 2
+
+The fruit endpoints from Level 1 remain active, but fruit creation and filtering now depend on a valid provider relationship.
+
+#### POST `/fruits`
+
+Creates a fruit associated with an existing provider.
+
+**Request body**
+
+```json
+{
+  "name": "Orange",
+  "weightInKilos": 20,
+  "providerId": 1
+}
+```
+
+**Success response**
+
+- `201 Created` when the fruit and provider relationship are valid.
+
+**Error responses**
+
+- `400 Bad Request` when the request body is invalid or no provider is supplied.
+- `404 Not Found` when `providerId` does not match an existing provider.
+
+
+#### GET `/fruits?providerId={id}`
+
+Returns fruits filtered by provider ID using a query parameter, which is a standard pattern for filtering REST collections.
+
+**Query parameter**
+
+- `providerId`: provider identifier.
+
+**Success response**
+
+- `200 OK` with the list of fruits supplied by the selected provider.
+
+**Error responses**
+
+- `404 Not Found` when the provider does not exist.
+
+
+## Level 3: MongoDB order API
+
+This project manages fruit orders using MongoDB document persistence, where each order can include embedded items.[^7][^8]
+
+### Data model
+
+| Entity | Fields |
+| :-- | :-- |
+| `Order` | `id: String`, `clientName: String`, `deliveryDate: LocalDate`, `items: List<OrderItem>` |
+| `OrderItem` | `fruitName: String`, `quantityInKilos: int` |
+
+Spring Data MongoDB supports CRUD document operations such as save, update, query, and delete for this kind of model.
+
+### Endpoints
+
+#### POST `/orders`
+
+Creates a new order document.[^7][^8]
+
+**Request body**
+
+```json
+{
+  "clientName": "Laura Pérez",
+  "deliveryDate": "2026-05-16",
+  "items": [
+    {
+      "fruitName": "Apple",
+      "quantityInKilos": 3
+    },
+    {
+      "fruitName": "Banana",
+      "quantityInKilos": 2
+    }
+  ]
+}
+```
+
+**Success response**
+
+- `201 Created` with the stored order.
+
+**Error responses**
+
+- `400 Bad Request` when `clientName` is missing, the item list is empty, an item has no name, an item quantity is not positive, or the delivery date is earlier than the next day.
+
+
+#### GET `/orders`
+
+Returns all orders.
+
+**Success response**
+
+- `200 OK` with a JSON array of orders.
+- If there are no orders, the API should return `200 OK` with an empty list.[^3]
+
+
+#### GET `/orders/{id}`
+
+Returns an order by its identifier.
+
+**Path parameter**
+
+- `id`: order identifier.
+
+**Success response**
+
+- `200 OK` with the full order document when the ID exists.
+
+**Error responses**
+
+- `404 Not Found` when the order does not exist.
+
+
+#### PUT `/orders/{id}`
+
+Updates an existing order.[^7][^3][^2]
+
+**Path parameter**
+
+- `id`: order identifier.
+
+**Request body**
+
+```json
+{
+  "clientName": "Laura Pérez",
+  "deliveryDate": "2026-05-18",
+  "items": [
+    {
+      "fruitName": "Apple",
+      "quantityInKilos": 5
+    }
+  ]
+}
+```
+
+**Success response**
+
+- `200 OK` when the order is updated successfully.
+
+**Error responses**
+
+- `400 Bad Request` when the payload is invalid.
+- `404 Not Found` when the order ID does not exist.
+
+
+#### DELETE `/orders/{id}`
+
+Deletes an order by identifier.
+
+**Path parameter**
+
+- `id`: order identifier.
+
+**Success response**
+
+- `204 No Content` when the order is deleted successfully.
+
+**Error responses**
+
+- `404 Not Found` when the order does not exist
 
 ## Level 1
 
@@ -436,397 +1018,3 @@ int quantityInKilos;
 | GET | `/orders/{id}` | Get an order by identifier |
 | PUT | `/orders/{id}` | Update an existing order |
 | DELETE | `/orders/{id}` | Delete an order |
-
-# Fruit API Endpoint Documentation
-
-This document describes the REST endpoints proposed in the assignment for the three Spring Boot projects. The endpoint design follows common REST conventions: collection-oriented resource names, standard HTTP methods, and appropriate status codes for CRUD operations.[^1][^2][^3][^4]
-
-## General conventions
-
-- Base format: JSON request and response bodies are expected for create and update operations, which aligns with common Spring Boot REST API practice.[^5][^1]
-- Resource naming: plural nouns such as `/fruits`, `/providers`, and `/orders` are consistent with REST naming guidelines.[^2][^1]
-- Common success codes: `200 OK` for successful reads and updates, `201 Created` for successful creations, and `204 No Content` for successful deletions are standard CRUD patterns.[^3][^4][^2]
-- Common error codes: `400 Bad Request` is used for invalid input, while `404 Not Found` is used when the requested resource does not exist.[^4][^6][^3]
-
-
-## Level 1: H2 fruit stock API
-
-This project manages fruit stock using an H2 in-memory database and a REST API built with Spring Boot.[^5]
-
-### Data model
-
-| Entity | Fields |
-| :-- | :-- |
-| `Fruit` | `id: Long`, `name: String`, `weightInKilos: int` |
-
-### Endpoints
-
-#### POST `/fruits`
-
-Creates a new fruit record.[^2][^3]
-
-**Request body**
-
-```json
-{
-  "name": "Apple",
-  "weightInKilos": 12
-}
-```
-
-**Success response**
-
-- `201 Created` when the fruit is stored successfully.[^3][^2]
-
-**Error responses**
-
-- `400 Bad Request` when `name` is blank or `weightInKilos` is invalid.[^6][^3]
-
-
-#### GET `/fruits`
-
-Returns all registered fruits.[^2][^3]
-
-**Success response**
-
-- `200 OK` with a JSON array of fruits.[^3][^2]
-- If there are no fruits, the response should still be `200 OK` with an empty array.[^3]
-
-**Example response**
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Apple",
-    "weightInKilos": 12
-  },
-  {
-    "id": 2,
-    "name": "Banana",
-    "weightInKilos": 8
-  }
-]
-```
-
-
-#### GET `/fruits/{id}`
-
-Returns one fruit by its identifier.[^2][^3]
-
-**Path parameter**
-
-- `id`: fruit identifier.
-
-**Success response**
-
-- `200 OK` with the fruit details when the ID exists.[^2][^3]
-
-**Error responses**
-
-- `404 Not Found` when no fruit matches the provided ID.[^4][^6][^3]
-
-
-#### PUT `/fruits/{id}`
-
-Updates an existing fruit.[^3][^2]
-
-**Path parameter**
-
-- `id`: fruit identifier.
-
-**Request body**
-
-```json
-{
-  "name": "Green Apple",
-  "weightInKilos": 14
-}
-```
-
-**Success response**
-
-- `200 OK` with the updated fruit.[^2][^3]
-
-**Error responses**
-
-- `400 Bad Request` when the request body is invalid.[^6][^3]
-- `404 Not Found` when the fruit ID does not exist.[^4][^6][^3]
-
-
-#### DELETE `/fruits/{id}`
-
-Deletes a fruit by its identifier.[^3][^2]
-
-**Path parameter**
-
-- `id`: fruit identifier.
-
-**Success response**
-
-- `204 No Content` when the fruit is deleted successfully.[^4][^2][^3]
-
-**Error responses**
-
-- `404 Not Found` when the fruit ID does not exist.[^6][^4][^3]
-
-
-## Level 2: MySQL fruit and provider API
-
-This project extends the previous API by adding providers and persisting the data in MySQL, while keeping the Level 1 fruit endpoints available.[^5][^2]
-
-### Data model
-
-| Entity | Fields |
-| :-- | :-- |
-| `Provider` | `id: Long`, `name: String`, `country: String` |
-| `Fruit` | `id: Long`, `name: String`, `weightInKilos: int`, `provider: Provider` |
-
-The relationship between `Fruit` and `Provider` is a typical parent reference and can be modeled with JPA using `@ManyToOne`.[^5]
-
-### Provider endpoints
-
-#### POST `/providers`
-
-Creates a new provider.[^2][^3]
-
-**Request body**
-
-```json
-{
-  "name": "Fresh Iberia",
-  "country": "Spain"
-}
-```
-
-**Success response**
-
-- `201 Created` when the provider is created successfully.[^3][^2]
-
-**Error responses**
-
-- `400 Bad Request` when the provider name is blank or duplicated according to the business rules described in the assignment.[^6][^3]
-
-
-#### GET `/providers`
-
-Returns all providers.[^2][^3]
-
-**Success response**
-
-- `200 OK` with a JSON array of providers.[^3][^2]
-
-
-#### PUT `/providers/{id}`
-
-Updates a provider.[^2][^3]
-
-**Path parameter**
-
-- `id`: provider identifier.
-
-**Request body**
-
-```json
-{
-  "name": "Fresh Iberia Group",
-  "country": "Spain"
-}
-```
-
-**Success response**
-
-- `200 OK` with the updated provider.[^3][^2]
-
-**Error responses**
-
-- `400 Bad Request` when the provider name is blank or duplicated.[^6][^3]
-- `404 Not Found` when the provider ID does not exist.[^4][^6][^3]
-
-
-#### DELETE `/providers/{id}`
-
-Deletes a provider.[^2][^3]
-
-**Path parameter**
-
-- `id`: provider identifier.
-
-**Success response**
-
-- `204 No Content` when the provider is deleted successfully and has no associated fruits.[^4][^3][^2]
-
-**Error responses**
-
-- `400 Bad Request` when the provider still has associated fruits and therefore cannot be removed under the assignment rules.[^6][^3]
-- `404 Not Found` when the provider ID does not exist.[^4][^6][^3]
-
-
-### Fruit endpoints in Level 2
-
-The fruit endpoints from Level 1 remain active, but fruit creation and filtering now depend on a valid provider relationship.[^5][^2]
-
-#### POST `/fruits`
-
-Creates a fruit associated with an existing provider.[^3][^2]
-
-**Request body**
-
-```json
-{
-  "name": "Orange",
-  "weightInKilos": 20,
-  "providerId": 1
-}
-```
-
-**Success response**
-
-- `201 Created` when the fruit and provider relationship are valid.[^2][^3]
-
-**Error responses**
-
-- `400 Bad Request` when the request body is invalid or no provider is supplied.[^6][^3]
-- `404 Not Found` when `providerId` does not match an existing provider.[^4][^6][^3]
-
-
-#### GET `/fruits?providerId={id}`
-
-Returns fruits filtered by provider ID using a query parameter, which is a standard pattern for filtering REST collections.[^1][^2]
-
-**Query parameter**
-
-- `providerId`: provider identifier.
-
-**Success response**
-
-- `200 OK` with the list of fruits supplied by the selected provider.[^3][^2]
-
-**Error responses**
-
-- `404 Not Found` when the provider does not exist.[^6][^4][^3]
-
-
-## Level 3: MongoDB order API
-
-This project manages fruit orders using MongoDB document persistence, where each order can include embedded items.[^7][^8]
-
-### Data model
-
-| Entity | Fields |
-| :-- | :-- |
-| `Order` | `id: String`, `clientName: String`, `deliveryDate: LocalDate`, `items: List<OrderItem>` |
-| `OrderItem` | `fruitName: String`, `quantityInKilos: int` |
-
-Spring Data MongoDB supports CRUD document operations such as save, update, query, and delete for this kind of model.[^8][^7]
-
-### Endpoints
-
-#### POST `/orders`
-
-Creates a new order document.[^7][^8]
-
-**Request body**
-
-```json
-{
-  "clientName": "Laura Pérez",
-  "deliveryDate": "2026-05-16",
-  "items": [
-    {
-      "fruitName": "Apple",
-      "quantityInKilos": 3
-    },
-    {
-      "fruitName": "Banana",
-      "quantityInKilos": 2
-    }
-  ]
-}
-```
-
-**Success response**
-
-- `201 Created` with the stored order.[^7][^2][^3]
-
-**Error responses**
-
-- `400 Bad Request` when `clientName` is missing, the item list is empty, an item has no name, an item quantity is not positive, or the delivery date is earlier than the next day.[^6][^3]
-
-
-#### GET `/orders`
-
-Returns all orders.[^7][^2][^3]
-
-**Success response**
-
-- `200 OK` with a JSON array of orders.[^2][^3]
-- If there are no orders, the API should return `200 OK` with an empty list.[^3]
-
-
-#### GET `/orders/{id}`
-
-Returns an order by its identifier.[^7][^2][^3]
-
-**Path parameter**
-
-- `id`: order identifier.
-
-**Success response**
-
-- `200 OK` with the full order document when the ID exists.[^2][^3]
-
-**Error responses**
-
-- `404 Not Found` when the order does not exist.[^4][^6][^3]
-
-
-#### PUT `/orders/{id}`
-
-Updates an existing order.[^7][^3][^2]
-
-**Path parameter**
-
-- `id`: order identifier.
-
-**Request body**
-
-```json
-{
-  "clientName": "Laura Pérez",
-  "deliveryDate": "2026-05-18",
-  "items": [
-    {
-      "fruitName": "Apple",
-      "quantityInKilos": 5
-    }
-  ]
-}
-```
-
-**Success response**
-
-- `200 OK` when the order is updated successfully.[^3][^2]
-
-**Error responses**
-
-- `400 Bad Request` when the payload is invalid.[^6][^3]
-- `404 Not Found` when the order ID does not exist.[^4][^6][^3]
-
-
-#### DELETE `/orders/{id}`
-
-Deletes an order by identifier.[^7][^2][^3]
-
-**Path parameter**
-
-- `id`: order identifier.
-
-**Success response**
-
-- `204 No Content` when the order is deleted successfully.[^4][^2][^3]
-
-**Error responses**
-
-- `404 Not Found` when the order does not exist.[^6][^4][^3]
-
