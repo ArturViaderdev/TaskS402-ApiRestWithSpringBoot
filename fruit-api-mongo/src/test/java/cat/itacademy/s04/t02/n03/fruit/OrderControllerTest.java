@@ -11,11 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import tools.jackson.databind.ObjectMapper;
-
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -163,5 +163,23 @@ public class OrderControllerTest {
                         "  \"deliveryDate\": \"2025-02-01\",\n" +
                         "  \"items\":[{\"fruitName\":\"Pera\",\"quantityInKilos\":\"100\"}]"+
                         "}")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteOrder() throws Exception{
+        MvcResult result = mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"clientName\": \"Comprador\",\n" +
+                        "  \"deliveryDate\": \"2025-01-01\",\n" +
+                        "  \"items\":[{\"fruitName\":\"Poma\",\"quantityInKilos\":\"100\"}]"+
+                        "}")).andReturn();
+        String response = result.getResponse().getContentAsString();
+        String id = JsonPath.parse(response).read("$.id").toString();
+        mockMvc.perform(MockMvcRequestBuilders.delete("/orders/{id}",id)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteOrderNotFound() throws Exception{
+        mockMvc.perform(MockMvcRequestBuilders.delete("/orders/{id}","999")).andExpect(status().isNotFound());
     }
 }

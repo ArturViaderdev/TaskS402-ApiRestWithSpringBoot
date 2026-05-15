@@ -182,4 +182,19 @@ public class OrderServiceTest {
         verify(orderRepository).existsById("999");
         verify(orderRepository, never()).save(any(Order.class));
     }
+
+    @Test
+    public void deleteOrderShouldDeleteWhenIdExists() {
+        when(orderRepository.existsById("1")).thenReturn(true);
+        orderService.deleteOrder("1");
+        verify(orderRepository).existsById("1");
+        verify(orderRepository).deleteById("1");
+    }
+
+    @Test
+    public void deleteOrderShouldThrowNotFoundWhenIdDoesNotExists() {
+        when(orderRepository.findById("999")).thenReturn(Optional.empty());
+        Assertions.assertThrows(OrderIdDoesNotExists.class, () -> orderService.getOrderById("999"));
+        verify(orderRepository).findById("999");
+    }
 }

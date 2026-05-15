@@ -10,4 +10,5 @@ public interface OrderService {
     List<Order> readAllOrders();
     Order getOrderById(String id);
     Order updateOrder(Order order, String id);
+    void deleteOrder(String id);
 }

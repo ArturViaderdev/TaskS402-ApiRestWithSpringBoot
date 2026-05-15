@@ -46,4 +46,12 @@ public class OrderController {
         Order savedOrder = orderService.updateOrder(provider, id);
         return ResponseEntity.ok(savedOrder);
     }
+
+    @DeleteMapping("/orders/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> deleteOrder(@PathVariable String id){
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+
+    }
 }

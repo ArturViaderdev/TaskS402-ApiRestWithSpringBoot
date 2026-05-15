@@ -120,4 +120,18 @@ public class OrderRepositoryTest {
         Assertions.assertEquals(result.getItems().get(0).getQuantityInKilos(),100);
         Assertions.assertEquals(result.getItems().get(1).getQuantityInKilos(),200);
     }
+
+    @Test
+    void deleteByIdTest(){
+        Order order = new Order();
+        order.setClientName("Pedro");
+        order.setDeliveryDate(LocalDate.now());
+        List<OrderItem> items = new ArrayList<>();
+        items.add(new OrderItem("Poma",100));
+        order.setItems(items);
+        Order savedOrder = orderRepository.save(order);
+        orderRepository.deleteById(savedOrder.getId());
+        Optional<Order> result = orderRepository.findById(savedOrder.getId());
+        Assertions.assertTrue(result.isEmpty());
+    }
 }

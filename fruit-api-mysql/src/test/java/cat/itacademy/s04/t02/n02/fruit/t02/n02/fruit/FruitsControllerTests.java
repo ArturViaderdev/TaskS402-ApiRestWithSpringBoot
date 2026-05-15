@@ -24,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestPropertySource(properties = "spring.profiles.active=test")
 public class FruitsControllerTests {
-    //Warning, Execution of this test class will delete all the data stored.
     @Autowired
     private MockMvc mockMvc;
 
@@ -195,6 +194,33 @@ public class FruitsControllerTests {
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("Manzana"))
                 .andExpect(jsonPath("$.weightInKilos").value("300"));
+    }
+
+    @Test
+    @Transactional
+    public void deleteFruitTest() throws Exception {
+        MvcResult result = mockMvc.perform(post("/providers").contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Frutero\",\n" +
+                        "  \"country\": \"Spain\"\n" +
+                        "}")).andReturn();
+        String response = result.getResponse().getContentAsString();
+        String idProvider = JsonPath.parse(response).read("$.id").toString();
+
+        result = mockMvc.perform(post("/fruits").param("providerId", idProvider).contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "  \"name\": \"Poma\",\n" +
+                        "  \"weightInKilos\": \"200\"\n" +
+                        "}")).andReturn();
+        response = result.getResponse().getContentAsString();
+        String id = JsonPath.parse(response).read("$.id").toString();
+        mockMvc.perform(delete("fruits{id}",id)).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @Transactional
+    public void deleteFruitNotFound() throws Exception{
+        mockMvc.perform(delete("fruits{id}","999")).andExpect(status().isNotFound());
     }
 
     @Test
