@@ -493,7 +493,7 @@ Spring Data MongoDB supports CRUD document operations such as save, update, quer
 
 #### POST `/orders`
 
-Creates a new order document.[^7][^8]
+Creates a new order document.
 
 **Request body**
 
@@ -530,7 +530,7 @@ Returns all orders.
 **Success response**
 
 - `200 OK` with a JSON array of orders.
-- If there are no orders, the API should return `200 OK` with an empty list.[^3]
+- If there are no orders, the API should return `200 OK` with an empty list.
 
 
 #### GET `/orders/{id}`
@@ -552,7 +552,7 @@ Returns an order by its identifier.
 
 #### PUT `/orders/{id}`
 
-Updates an existing order.[^7][^3][^2]
+Updates an existing order.
 
 **Path parameter**
 
@@ -671,7 +671,7 @@ so that I can ensure the stock only contains relevant and updated information.
 
 ### Project Setup
 
-Go to [start.spring.io](https://start.spring.io/) and generate a Spring Boot project with the following characteristics: [web:10][web:13]
+Go to [start.spring.io](https://start.spring.io/) and generate a Spring Boot project with the following characteristics:
 
 | Parameter | Value |
 |---|---|
