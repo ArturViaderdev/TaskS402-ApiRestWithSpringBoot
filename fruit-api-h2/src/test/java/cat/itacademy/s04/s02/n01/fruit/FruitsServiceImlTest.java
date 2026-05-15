@@ -1,5 +1,8 @@
 package cat.itacademy.s04.s02.n01.fruit;
 
+import cat.itacademy.s04.s02.n01.fruit.dto.FruitMapper;
+import cat.itacademy.s04.s02.n01.fruit.dto.FruitRequestDTO;
+import cat.itacademy.s04.s02.n01.fruit.dto.FruitResponseDTO;
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import cat.itacademy.s04.s02.n01.fruit.service.FruitServiceImpl;
@@ -28,20 +31,18 @@ public class FruitsServiceImlTest {
 
     @Test
     public void createFruitShouldSaveAndReturnFruit() {
-        Fruit fruit = new Fruit();
-        fruit.setName("Poma");
-        fruit.setWeightInKilos(200);
+        FruitRequestDTO fruit = new FruitRequestDTO("Poma",200);
         Fruit savedFruit = new Fruit();
         savedFruit.setId(1L);
         savedFruit.setName("Poma");
         savedFruit.setWeightInKilos(200);
-        when(fruitRepository.save(fruit)).thenReturn(savedFruit);
-        Fruit result = fruitService.createFruit(fruit);
+        when(fruitRepository.save(FruitMapper.toEntity(fruit))).thenReturn(savedFruit);
+        FruitResponseDTO result = fruitService.createFruit(fruit);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1L, result.getId());
-        Assertions.assertEquals("Poma", result.getName());
-        Assertions.assertEquals(200, result.getWeightInKilos());
-        verify(fruitRepository).save(fruit);
+        Assertions.assertEquals(1L, result.id());
+        Assertions.assertEquals("Poma", result.name());
+        Assertions.assertEquals(200, result.weightInKilos());
+        verify(fruitRepository).save(FruitMapper.toEntity(fruit));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class FruitsServiceImlTest {
         fruit.setName("Pera");
         fruit.setWeightInKilos(300);
         when(fruitRepository.findAll()).thenReturn(List.of(fruit, secondFruit));
-        List<Fruit> result = fruitService.readAllFruits();
+        List<FruitResponseDTO> result = fruitService.readAllFruits();
         Assertions.assertEquals(2, result.size());
         verify(fruitRepository).findAll();
     }
@@ -67,11 +68,11 @@ public class FruitsServiceImlTest {
         fruit.setName("Poma");
         fruit.setWeightInKilos(200);
         when(fruitRepository.findById(1L)).thenReturn(Optional.of(fruit));
-        Fruit result = fruitService.getFruitById(1L);
+        FruitResponseDTO result = fruitService.getFruitById(1L);
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(1L, result.getId());
-        Assertions.assertEquals("Poma", result.getName());
-        Assertions.assertEquals(200, result.getWeightInKilos());
+        Assertions.assertEquals(1L, result.id());
+        Assertions.assertEquals("Poma", result.name());
+        Assertions.assertEquals(200, result.weightInKilos());
         verify(fruitRepository).findById(1L);
     }
 
@@ -108,33 +109,26 @@ public class FruitsServiceImlTest {
 
     @Test
     public void updateFruitShouldUpdateAndReturnFruitWhenItExists() {
-        Fruit fruit = new Fruit();
-        fruit.setName("Poma");
-        fruit.setWeightInKilos(200);
+        FruitRequestDTO dto = new FruitRequestDTO("Manzana",300);
 
-        Fruit updatedFruit = new Fruit();
-        updatedFruit.setId(1L);
-        updatedFruit.setName("Manzana");
-        updatedFruit.setWeightInKilos(300);
+        Fruit savedFruit = new Fruit();
+        savedFruit.setId(1L);
+        savedFruit.setName("Manzana");
+        savedFruit.setWeightInKilos(300);
 
         when(fruitRepository.existsById(1L)).thenReturn(true);
-        when(fruitRepository.save(fruit)).thenReturn(updatedFruit);
-
-        Fruit result = fruitService.updateFruit(fruit, 1L);
-
-        Assertions.assertEquals(1L, result.getId());
-        Assertions.assertEquals("Manzana", result.getName());
-        Assertions.assertEquals(300, result.getWeightInKilos());
-        Assertions.assertEquals(1L, fruit.getId());
+        when(fruitRepository.save(any(Fruit.class))).thenReturn(savedFruit);
+        FruitResponseDTO result = fruitService.updateFruit(dto,1L);
+        Assertions.assertEquals(1L,result.id());
+        Assertions.assertEquals("Manzana",result.name());
+        Assertions.assertEquals(300,result.weightInKilos());
         verify(fruitRepository).existsById(1L);
-        verify(fruitRepository).save(fruit);
+        verify(fruitRepository).save(any(Fruit.class));
     }
 
     @Test
     public void updateFruitNotFound() {
-        Fruit fruit = new Fruit();
-        fruit.setName("Poma");
-        fruit.setWeightInKilos(200);
+        FruitRequestDTO fruit = new FruitRequestDTO("Poma",200);
         when(fruitRepository.existsById(999L)).thenReturn(false);
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> fruitService.updateFruit(fruit, 999L));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());

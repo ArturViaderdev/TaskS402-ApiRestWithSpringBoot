@@ -1,5 +1,8 @@
 package cat.itacademy.s04.s02.n01.fruit.service;
 
+import cat.itacademy.s04.s02.n01.fruit.dto.FruitMapper;
+import cat.itacademy.s04.s02.n01.fruit.dto.FruitRequestDTO;
+import cat.itacademy.s04.s02.n01.fruit.dto.FruitResponseDTO;
 import cat.itacademy.s04.s02.n01.fruit.model.Fruit;
 import cat.itacademy.s04.s02.n01.fruit.repository.FruitRepository;
 import org.springframework.http.HttpStatus;
@@ -18,33 +21,36 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
-    public Fruit createFruit(Fruit fruit) {
-        return fruitRepository.save(fruit);
+    public FruitResponseDTO createFruit(FruitRequestDTO fruit) {
+        return FruitMapper.toDTO(fruitRepository.save(FruitMapper.toEntity(fruit)));
     }
 
     @Override
-    public List<Fruit> readAllFruits() {
-        List<Fruit> fruits = fruitRepository.findAll();
-        return fruits;
+    public List<FruitResponseDTO> readAllFruits() {
+       return fruitRepository.findAll()
+               .stream()
+               .map(FruitMapper::toDTO)
+               .toList();
     }
 
     @Override
-    public Fruit getFruitById(Long id) {
+    public FruitResponseDTO getFruitById(Long id) {
         Optional<Fruit> fruit = fruitRepository.findById(id);
         if (fruit.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        } else {
-            return fruit.get();
         }
+        return FruitMapper.toDTO(fruit.get());
+
     }
 
     @Override
-    public Fruit updateFruit(Fruit fruit, Long id) {
+    public FruitResponseDTO updateFruit(FruitRequestDTO fruit, Long id) {
         if (!fruitRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        fruit.setId(id);
-        return fruitRepository.save(fruit);
+        Fruit fruitEntity = FruitMapper.toEntity(fruit);
+        fruitEntity.setId(id);
+        return FruitMapper.toDTO(fruitRepository.save(fruitEntity));
     }
 
     @Override

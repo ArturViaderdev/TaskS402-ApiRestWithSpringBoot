@@ -63,7 +63,7 @@ public class FruitsControllerTest {
                                 "}")).andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value("Poma"))
-                .andExpect(jsonPath("$.weightInKilos").value("200"));
+                .andExpect(jsonPath("$.weightInKilos").value(200));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class FruitsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("Poma"))
-                .andExpect(jsonPath("$.weightInKilos").value("200"));
+                .andExpect(jsonPath("$.weightInKilos").value(200));
 
     }
 
@@ -105,23 +105,24 @@ public class FruitsControllerTest {
         MvcResult result = mockMvc.perform(post("/fruits").contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
                         "  \"name\": \"Poma\",\n" +
-                        "  \"weightInKilos\": \"200\"\n" +
+                        "  \"weightInKilos\": 200\n" +
                         "}")).andReturn();
         String response = result.getResponse().getContentAsString();
         String id = JsonPath.parse(response).read("$.id").toString();
         mockMvc.perform(put("/fruits/{id}", id).contentType(MediaType.APPLICATION_JSON)
                         .content("{\n" +
                                 "  \"name\": \"Manzana\",\n" +
-                                "  \"weightInKilos\": \"300\"\n" +
+                                "  \"weightInKilos\": 300\n" +
                                 "}")).andExpect(status().isOk())
+
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("Manzana"))
-                .andExpect(jsonPath("$.weightInKilos").value("300"));
+                .andExpect(jsonPath("$.weightInKilos").value(300));
         mockMvc.perform(get("/fruits/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value("Manzana"))
-                .andExpect(jsonPath("$.weightInKilos").value("300"));
+                .andExpect(jsonPath("$.weightInKilos").value(300));
     }
 
     @Test
