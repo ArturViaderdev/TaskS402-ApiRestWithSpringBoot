@@ -31,7 +31,7 @@ public class FruitsServiceImlTest {
 
     @Test
     public void createFruitShouldSaveAndReturnFruit() {
-        FruitRequestDTO fruit = new FruitRequestDTO("Poma",200);
+        FruitRequestDTO fruit = new FruitRequestDTO("Poma", 200);
         Fruit savedFruit = new Fruit();
         savedFruit.setId(1L);
         savedFruit.setName("Poma");
@@ -109,7 +109,7 @@ public class FruitsServiceImlTest {
 
     @Test
     public void updateFruitShouldUpdateAndReturnFruitWhenItExists() {
-        FruitRequestDTO dto = new FruitRequestDTO("Manzana",300);
+        FruitRequestDTO dto = new FruitRequestDTO("Manzana", 300);
 
         Fruit savedFruit = new Fruit();
         savedFruit.setId(1L);
@@ -118,17 +118,17 @@ public class FruitsServiceImlTest {
 
         when(fruitRepository.existsById(1L)).thenReturn(true);
         when(fruitRepository.save(any(Fruit.class))).thenReturn(savedFruit);
-        FruitResponseDTO result = fruitService.updateFruit(dto,1L);
-        Assertions.assertEquals(1L,result.id());
-        Assertions.assertEquals("Manzana",result.name());
-        Assertions.assertEquals(300,result.weightInKilos());
+        FruitResponseDTO result = fruitService.updateFruit(dto, 1L);
+        Assertions.assertEquals(1L, result.id());
+        Assertions.assertEquals("Manzana", result.name());
+        Assertions.assertEquals(300, result.weightInKilos());
         verify(fruitRepository).existsById(1L);
         verify(fruitRepository).save(any(Fruit.class));
     }
 
     @Test
     public void updateFruitNotFound() {
-        FruitRequestDTO fruit = new FruitRequestDTO("Poma",200);
+        FruitRequestDTO fruit = new FruitRequestDTO("Poma", 200);
         when(fruitRepository.existsById(999L)).thenReturn(false);
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> fruitService.updateFruit(fruit, 999L));
         Assertions.assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());

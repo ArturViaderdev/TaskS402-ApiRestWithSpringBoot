@@ -4,8 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 public record FruitRequestDTO(
-    @NotBlank String name,
-    @Positive int weightInKilos)
-    {
+        @NotBlank String name,
+        @Positive int weightInKilos) {
 
-    }
+}
