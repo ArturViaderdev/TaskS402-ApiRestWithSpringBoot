@@ -52,4 +52,9 @@ public class Provider {
     public void setCountry(String country) {
         this.country = country;
     }
+
+    public Provider()
+    {
+
+    }
 }

@@ -1,5 +1,8 @@
 package cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.service;
 
+import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitMapper;
+import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitRequestDTO;
+import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitResponseDTO;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.FruitIdDoesNotExists;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.FruitNameIsEmpty;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.ProviderNotFound;
@@ -23,52 +26,51 @@ public class FruitServiceImpl implements FruitService {
     }
 
     @Override
-    public Fruit createFruit(Fruit fruit, Long idProvider) throws FruitNameIsEmpty, ProviderNotFound {
+    public FruitResponseDTO createFruit(FruitRequestDTO fruit, Long idProvider) throws FruitNameIsEmpty, ProviderNotFound {
         Optional<Provider> provider = providerRepository.findById(idProvider);
         if (provider.isEmpty()) {
             throw new ProviderNotFound();
         }
-        if (fruit.getName().isEmpty()) {
+        if (fruit.name().isEmpty()) {
             throw new FruitNameIsEmpty();
         }
-        Fruit fruitToSave = new Fruit();
-        fruitToSave.setName(fruit.getName());
-        fruitToSave.setWeightInKilos(fruit.getWeightInKilos());
-        fruitToSave.setProvider(provider.get());
-        return fruitRepository.save(fruitToSave);
+        Fruit fruitToSave = FruitMapper.toEntity(fruit,provider.get());
+
+        return FruitMapper.toDTO(fruitRepository.save(fruitToSave));
     }
 
     @Override
-    public List<Fruit> readAllFruits(long providerId) throws ProviderNotFound {
+    public List<FruitResponseDTO> readAllFruits(long providerId) throws ProviderNotFound {
         Optional<Provider> provider = providerRepository.findById(providerId);
         if (provider.isEmpty()) {
             throw new ProviderNotFound();
         }
-        return fruitRepository.findByProviderId(providerId);
+        return fruitRepository.findByProviderId(providerId).stream().map(FruitMapper::toDTO).toList();
     }
 
     @Override
-    public Fruit getFruitById(Long id) {
+    public FruitResponseDTO getFruitById(Long id) {
         Optional<Fruit> fruit = fruitRepository.findById(id);
         if (fruit.isEmpty()) {
             throw new FruitIdDoesNotExists();
         }
-        return fruit.get();
+        return FruitMapper.toDTO(fruit.get());
     }
 
     @Override
-    public Fruit updateFruit(Fruit fruit, Long id, Long provider) {
+    public FruitResponseDTO updateFruit(FruitRequestDTO fruit, Long id, Long provider) {
         if (!(fruitRepository.existsById(id))) {
             throw new FruitIdDoesNotExists();
         }
-        fruit.setId(id);
+
         Optional<Provider> providerObject = providerRepository.findById(provider);
         if (providerObject.isEmpty()) {
             throw new ProviderNotFound();
         }
-        fruit.setProvider(providerObject.get());
-        fruitRepository.save(fruit);
-        return fruit;
+
+        Fruit saveFruit = FruitMapper.toEntity(fruit,providerObject.get());
+        saveFruit.setId(id);
+        return FruitMapper.toDTO(fruitRepository.save(saveFruit));
     }
 
     @Override

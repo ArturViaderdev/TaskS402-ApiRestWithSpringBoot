@@ -53,8 +53,8 @@ public class FruitsServiceImlTest {
         fruit.setWeightInKilos(200);
         Fruit secondFruit = new Fruit();
         secondFruit.setId(2L);
-        fruit.setName("Pera");
-        fruit.setWeightInKilos(300);
+        secondFruit.setName("Pera");
+        secondFruit.setWeightInKilos(300);
         when(fruitRepository.findAll()).thenReturn(List.of(fruit, secondFruit));
         List<FruitResponseDTO> result = fruitService.readAllFruits();
         Assertions.assertEquals(2, result.size());

@@ -1,5 +1,8 @@
 package cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.service;
 
+import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.ProviderMapper;
+import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.ProviderRequestDTO;
+import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.ProviderResponseDTO;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.ProviderHasFruits;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.ProviderNameAlreadyExists;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.ProviderNameIsEmpty;
@@ -23,37 +26,33 @@ public class ProviderServiceImpl implements ProviderService {
         this.fruitRepository = fruitRepository;
     }
 
-    private Provider saveProvider(Provider provider, boolean update) {
-        if (provider.getName().isEmpty()) {
+    @Override
+    public ProviderResponseDTO createProvider(ProviderRequestDTO provider) throws ProviderNameIsEmpty, ProviderNameAlreadyExists {
+        if (provider.name().isEmpty()) {
             throw new ProviderNameIsEmpty();
         }
-        Optional<Provider> providerName = providerRepository.findByName(provider.getName());
+        Optional<Provider> providerName = providerRepository.findByName(provider.name());
         if ((providerName.isPresent())) {
-            if (update) {
-                if (!(providerName.get().getId().equals(provider.getId()))) {
-                    throw new ProviderNameAlreadyExists();
-                }
-            } else {
-                throw new ProviderNameAlreadyExists();
-            }
+            throw new ProviderNameAlreadyExists();
         }
-        return providerRepository.save(provider);
+        return ProviderMapper.toDTO(providerRepository.save(ProviderMapper.toEntity(provider)));
     }
 
     @Override
-    public Provider createProvider(Provider provider) throws ProviderNameIsEmpty, ProviderNameAlreadyExists {
-        return saveProvider(provider, false);
-
-    }
-
-    @Override
-    public Provider updateProvider(Provider provider, Long idProvider) throws ProviderNotFound {
+    public ProviderResponseDTO updateProvider(ProviderRequestDTO provider, Long idProvider) throws ProviderNotFound {
         Optional<Provider> existProvider = providerRepository.findById(idProvider);
         if (existProvider.isEmpty()) {
             throw new ProviderNotFound();
         }
-        provider.setId(existProvider.get().getId());
-        return saveProvider(provider, true);
+        Optional<Provider> providerName = providerRepository.findByName(provider.name());
+        if ((providerName.isPresent())) {
+            if (!(providerName.get().getId().equals(idProvider))) {
+                throw new ProviderNameAlreadyExists();
+            }
+        }
+        Provider saveProvider = ProviderMapper.toEntity(provider);
+        saveProvider.setId(idProvider);
+        return ProviderMapper.toDTO(providerRepository.save(saveProvider));
     }
 
     @Override
@@ -70,7 +69,7 @@ public class ProviderServiceImpl implements ProviderService {
     }
 
     @Override
-    public List<Provider> getProviders() {
-        return providerRepository.findAll();
+    public List<ProviderResponseDTO> getProviders() {
+        return providerRepository.findAll().stream().map(ProviderMapper::toDTO).toList();
     }
 }
