@@ -1,5 +1,6 @@
 package cat.itacademy.s04.t02.n03.fruit;
 
+import cat.itacademy.s04.t02.n03.fruit.dto.*;
 import cat.itacademy.s04.t02.n03.fruit.exception.ClientNameIsEmptyException;
 import cat.itacademy.s04.t02.n03.fruit.exception.FruitsEmptyException;
 import cat.itacademy.s04.t02.n03.fruit.exception.OrderIdDoesNotExists;
@@ -31,89 +32,77 @@ public class OrderServiceTest {
     private OrderServiceImpl orderService;
 
     @BeforeEach
-    public void delete()
-    {
+    public void delete() {
         orderRepository.deleteAll();
     }
 
     @Test
-    public void createOrderShouldSaveAndReturnOrder()
-    {
-        Order order = new Order();
-        order.setClientName("Pedro");
-        order.setDeliveryDate(LocalDate.now());
-        List<OrderItem> items = new ArrayList<>();
-        items.add(new OrderItem("Poma",100));
-        order.setItems(items);
-        order.setId("1");
+    public void createOrderShouldSaveAndReturnOrder() {
+        List<OrderItemDTO> items = new ArrayList<>();
+        items.add(new OrderItemDTO("Poma", 100));
+        OrderRequestDTO order = new OrderRequestDTO("Pedro", LocalDate.now(), items);
+        Order savedOrder = OrderMapper.toEntity(order);
 
-        when(orderRepository.save(any(Order.class))).thenReturn(order);
-        Order result = orderService.createOrder(order);
-        Assertions.assertEquals("Pedro",result.getClientName());
-        Assertions.assertEquals(1,result.getItems().size());
-        Assertions.assertEquals("Poma",result.getItems().get(0).getFruitName());
-        verify(orderRepository,times(1)).save(any(Order.class));
+        when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
+        OrderResponseDTO result = orderService.createOrder(order);
+        Assertions.assertEquals("Pedro", result.clientName());
+        Assertions.assertEquals(1, result.items().size());
+        Assertions.assertEquals("Poma", result.items().get(0).fruitName());
+        verify(orderRepository, times(1)).save(any(Order.class));
     }
 
     @Test
     public void createOrderShouldThrowExceptionWhenNameIsEmpty() {
-        Order order = new Order();
-        order.setClientName("");
-        order.setDeliveryDate(LocalDate.now());
-        List<OrderItem> items = new ArrayList<>();
-        items.add(new OrderItem("Poma",100));
-        order.setItems(items);
-        order.setId("1");
-        Assertions.assertThrows(ClientNameIsEmptyException.class, ()-> orderService.createOrder(order));
-        verify(orderRepository,never()).save(any(Order.class));
+
+        List<OrderItemDTO> items = new ArrayList<>();
+        items.add(new OrderItemDTO("Poma", 100));
+        OrderRequestDTO order = new OrderRequestDTO("", LocalDate.now(), items);
+
+        Assertions.assertThrows(ClientNameIsEmptyException.class, () -> orderService.createOrder(order));
+        verify(orderRepository, never()).save(any(Order.class));
     }
 
     @Test
-    public void fruitsEmptyException()
-    {
-        Order order = new Order();
-        order.setClientName("Juan");
-        order.setDeliveryDate(LocalDate.now());
-        List<OrderItem> items = new ArrayList<>();
-        order.setItems(items);
-        order.setId("1");
+    public void fruitsEmptyException() {
+        List<OrderItemDTO> items = new ArrayList<>();
+        OrderRequestDTO order = new OrderRequestDTO("Pedro", LocalDate.now(), items);
+        Order savedOrder = OrderMapper.toEntity(order);
+
         Assertions.assertThrows(FruitsEmptyException.class, () -> orderService.createOrder(order));
-        verify(orderRepository,never()).save(any(Order.class));
+        verify(orderRepository, never()).save(any(Order.class));
     }
 
     @Test
-    public void readAllOrdersShouldReturnAllOrders()
-    {
+    public void readAllOrdersShouldReturnAllOrders() {
         Order orderA = new Order();
         orderA.setId("1");
         orderA.setClientName("Juan");
         orderA.setDeliveryDate(LocalDate.now());
-        orderA.setItems(List.of(new OrderItem("Poma",100),new OrderItem("Pera",200)));
+        orderA.setItems(List.of(new OrderItem("Poma", 100), new OrderItem("Pera", 200)));
 
         Order orderB = new Order();
         orderB.setId("2");
         orderB.setClientName("Pedro");
         orderB.setDeliveryDate(LocalDate.now());
-        orderB.setItems(List.of(new OrderItem("Poma",100)));
-        List<Order> orders = List.of(orderA,orderB);
+        orderB.setItems(List.of(new OrderItem("Poma", 100)));
+        List<Order> orders = List.of(orderA, orderB);
         when(orderRepository.findAll()).thenReturn(orders);
-        List<Order> result = orderService.readAllOrders();
-        Assertions.assertEquals(2,result.size());
-        Assertions.assertEquals("Juan",result.get(0).getClientName());
-        Assertions.assertEquals("Pedro",result.get(1).getClientName());
-        Assertions.assertEquals(2,result.get(0).getItems().size());
-        Assertions.assertEquals(1,result.get(1).getItems().size());
-        verify(orderRepository,times(1)).findAll();
+        List<OrderResponseDTO> result = orderService.readAllOrders();
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals("Juan", result.get(0).clientName());
+        Assertions.assertEquals("Pedro", result.get(1).clientName());
+        Assertions.assertEquals(2, result.get(0).items().size());
+        Assertions.assertEquals(1, result.get(1).items().size());
+        verify(orderRepository, times(1)).findAll();
     }
 
     @Test
-    public void readAllOrdersShouldReturnEmptyList()
-    {
+    public void readAllOrdersShouldReturnEmptyList() {
         when(orderRepository.findAll()).thenReturn(List.of());
-        List<Order> result = orderService.readAllOrders();
+        List<OrderResponseDTO> result = orderService.readAllOrders();
         Assertions.assertTrue(result.isEmpty());
-        Assertions.assertEquals(0,result.size());
-        verify(orderRepository,times(1)).findAll();
+        Assertions.assertEquals(0, result.size());
+        verify(orderRepository, times(1)).findAll();
     }
 
     @Test
@@ -122,17 +111,17 @@ public class OrderServiceTest {
         order.setClientName("Pedro");
         order.setDeliveryDate(LocalDate.now());
         List<OrderItem> items = new ArrayList<>();
-        items.add(new OrderItem("Poma",100));
+        items.add(new OrderItem("Poma", 100));
         order.setItems(items);
         order.setId("1");
         when(orderRepository.findById("1")).thenReturn(Optional.of(order));
-        Order result = orderService.getOrderById("1");
+        OrderResponseDTO result = orderService.getOrderById("1");
         Assertions.assertNotNull(result);
-        Assertions.assertEquals("1", result.getId());
-        Assertions.assertEquals("Pedro", result.getClientName());
-        Assertions.assertEquals(1, result.getItems().size());
-        Assertions.assertEquals("Poma", result.getItems().get(0).getFruitName());
-        Assertions.assertEquals(100, result.getItems().get(0).getQuantityInKilos());
+        Assertions.assertEquals("1", result.id());
+        Assertions.assertEquals("Pedro", result.clientName());
+        Assertions.assertEquals(1, result.items().size());
+        Assertions.assertEquals("Poma", result.items().get(0).fruitName());
+        Assertions.assertEquals(100, result.items().get(0).quantityInKilos());
         verify(orderRepository).findById("1");
     }
 
@@ -145,39 +134,34 @@ public class OrderServiceTest {
 
     @Test
     public void updateOrderShouldUpdateAndReturnOrderWhenItExists() {
-        Order order = new Order();
-        order.setClientName("Pedro");
-        order.setDeliveryDate(LocalDate.now());
-        List<OrderItem> items = new ArrayList<>();
-        items.add(new OrderItem("Poma",100));
-        order.setItems(items);
-        order.setId("1");
+        List<OrderItemDTO> items = new ArrayList<>();
+        items.add(new OrderItemDTO("Poma", 100));
+        OrderRequestDTO order = new OrderRequestDTO("Pedro", LocalDate.now(), items);
 
         when(orderRepository.existsById("1")).thenReturn(true);
 
         when(orderRepository.save(any(Order.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Order result = orderService.updateOrder(order, "1");
-        Assertions.assertEquals("Pedro", result.getClientName());
-        Assertions.assertEquals(1, result.getItems().size());
-        Assertions.assertEquals("Poma", result.getItems().get(0).getFruitName());
-        Assertions.assertEquals(100, result.getItems().get(0).getQuantityInKilos());
+        OrderResponseDTO result = orderService.updateOrder(order, "1");
+        Assertions.assertEquals("Pedro", result.clientName());
+        Assertions.assertEquals(1, result.items().size());
+        Assertions.assertEquals("Poma", result.items().get(0).fruitName());
+        Assertions.assertEquals(100, result.items().get(0).quantityInKilos());
         Assertions.assertNotNull(result);
-        Assertions.assertEquals("1", result.getId());
+        Assertions.assertEquals("1", result.id());
 
         verify(orderRepository).existsById("1");
-        verify(orderRepository).save(order);
+        verify(orderRepository).save(any(Order.class));
     }
 
     @Test
     public void updateOrderNotFound() {
-        Order order = new Order();
-        order.setClientName("Pedro");
-        order.setDeliveryDate(LocalDate.now());
-        List<OrderItem> items = new ArrayList<>();
-        items.add(new OrderItem("Poma",100));
-        order.setItems(items);
+        List<OrderItemDTO> items = new ArrayList<>();
+        items.add(new OrderItemDTO("Poma", 100));
+        OrderRequestDTO order = new OrderRequestDTO("Pedro", LocalDate.now(), items);
+
         when(orderRepository.existsById("999")).thenReturn(false);
+
         RuntimeException exception = Assertions.assertThrows(OrderIdDoesNotExists.class, () -> orderService.updateOrder(order, "999"));
         verify(orderRepository).existsById("999");
         verify(orderRepository, never()).save(any(Order.class));

@@ -2,7 +2,6 @@ package cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.controller;
 
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitRequestDTO;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitResponseDTO;
-import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.model.Fruit;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.service.FruitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,7 @@ public class FruitController {
     @PostMapping("/fruits")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<FruitResponseDTO> postFruits(@RequestBody FruitRequestDTO fruit, @RequestParam(name = "providerId", defaultValue = "") Long provider) {
-        FruitResponseDTO savedFruit = fruitService.createFruit(fruit,provider);
+        FruitResponseDTO savedFruit = fruitService.createFruit(fruit, provider);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedFruit.id()).toUri();
         return ResponseEntity.created(location).body(savedFruit);
     }

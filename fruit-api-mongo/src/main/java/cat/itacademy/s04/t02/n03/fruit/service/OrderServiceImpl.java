@@ -1,5 +1,8 @@
 package cat.itacademy.s04.t02.n03.fruit.service;
 
+import cat.itacademy.s04.t02.n03.fruit.dto.OrderMapper;
+import cat.itacademy.s04.t02.n03.fruit.dto.OrderRequestDTO;
+import cat.itacademy.s04.t02.n03.fruit.dto.OrderResponseDTO;
 import cat.itacademy.s04.t02.n03.fruit.exception.ClientNameIsEmptyException;
 import cat.itacademy.s04.t02.n03.fruit.exception.FruitsEmptyException;
 import cat.itacademy.s04.t02.n03.fruit.exception.OrderIdDoesNotExists;
@@ -19,51 +22,50 @@ public class OrderServiceImpl implements OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public Order createOrder(Order order) {
-        if (order.getClientName().isEmpty()) {
+    public OrderResponseDTO createOrder(OrderRequestDTO order) {
+        if (order.clientName().isEmpty()) {
             throw new ClientNameIsEmptyException();
         }
-        if (order.getItems().size() == 0) {
+        if (order.items().size() == 0) {
             throw new FruitsEmptyException();
         }
-        Order orderToSave = new Order();
-        orderToSave.setClientName(order.getClientName());
-        orderToSave.setDeliveryDate(order.getDeliveryDate());
-        orderToSave.setItems(order.getItems());
-        return orderRepository.save(orderToSave);
+        Order orderToSave = OrderMapper.toEntity(order);
+
+        return OrderMapper.toDTO(orderRepository.save(orderToSave));
     }
 
     @Override
-    public Order findById(String id) {
+    public OrderResponseDTO findById(String id) {
         Optional<Order> order = orderRepository.findById(id);
         if (order.isEmpty()) {
             throw new OrderNotFoundException();
         }
-        return order.get();
+        return OrderMapper.toDTO(order.get());
     }
 
     @Override
-    public List<Order> readAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderResponseDTO> readAllOrders() {
+        return orderRepository.findAll().stream().map(OrderMapper::toDTO).toList();
     }
 
     @Override
-    public Order getOrderById(String id) {
+    public OrderResponseDTO getOrderById(String id) {
         Optional<Order> order = orderRepository.findById(id);
         if (order.isEmpty()) {
             throw new OrderIdDoesNotExists();
         }
-        return order.get();
+        return OrderMapper.toDTO(order.get());
     }
 
     @Override
-    public Order updateOrder(Order order, String id) {
+    public OrderResponseDTO updateOrder(OrderRequestDTO order, String id) {
         if (!(orderRepository.existsById(id))) {
             throw new OrderIdDoesNotExists();
         }
-        order.setId(id);
-        orderRepository.save(order);
-        return order;
+        Order orderEntity = OrderMapper.toEntity(order);
+        orderEntity.setId(id);
+        return OrderMapper.toDTO(orderRepository.save(orderEntity));
+
     }
 
     @Override

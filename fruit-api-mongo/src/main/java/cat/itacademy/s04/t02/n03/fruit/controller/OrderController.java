@@ -1,6 +1,7 @@
 package cat.itacademy.s04.t02.n03.fruit.controller;
 
-import cat.itacademy.s04.t02.n03.fruit.model.Order;
+import cat.itacademy.s04.t02.n03.fruit.dto.OrderRequestDTO;
+import cat.itacademy.s04.t02.n03.fruit.dto.OrderResponseDTO;
 import cat.itacademy.s04.t02.n03.fruit.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,30 +21,28 @@ public class OrderController {
 
     @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Order> postOrder(@RequestBody Order order) {
-        Order savedOrder = orderService.createOrder(order);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedOrder.getId()).toUri();
+    public ResponseEntity<OrderResponseDTO> postOrder(@RequestBody OrderRequestDTO order) {
+        OrderResponseDTO savedOrder = orderService.createOrder(order);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedOrder.id()).toUri();
         return ResponseEntity.created(location).body(savedOrder);
     }
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    public List<Order> getOrders() {
+    public List<OrderResponseDTO> getOrders() {
         return orderService.readAllOrders();
     }
 
     @GetMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Order getOrderById(@PathVariable String id) {
-        Order order = orderService.getOrderById(id);
-
-        return order;
+    public OrderResponseDTO getOrderById(@PathVariable String id) {
+        return orderService.getOrderById(id);
     }
 
     @PutMapping("/orders/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Order> updateOrder(@RequestBody Order provider, @PathVariable String id) {
-        Order savedOrder = orderService.updateOrder(provider, id);
+    public ResponseEntity<OrderResponseDTO> updateOrder(@RequestBody OrderRequestDTO order, @PathVariable String id) {
+        OrderResponseDTO savedOrder = orderService.updateOrder(order, id);
         return ResponseEntity.ok(savedOrder);
     }
 

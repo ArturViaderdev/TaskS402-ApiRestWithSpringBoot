@@ -27,10 +27,10 @@ public class FruitServiceImpl implements FruitService {
 
     @Override
     public List<FruitResponseDTO> readAllFruits() {
-       return fruitRepository.findAll()
-               .stream()
-               .map(FruitMapper::toDTO)
-               .toList();
+        return fruitRepository.findAll()
+                .stream()
+                .map(FruitMapper::toDTO)
+                .toList();
     }
 
     @Override

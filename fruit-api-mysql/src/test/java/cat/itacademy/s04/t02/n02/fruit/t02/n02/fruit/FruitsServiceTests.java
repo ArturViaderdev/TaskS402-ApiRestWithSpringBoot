@@ -1,9 +1,7 @@
 package cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit;
 
-import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitMapper;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitRequestDTO;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.FruitResponseDTO;
-import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.ProviderMapper;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.exception.FruitIdDoesNotExists;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.model.Fruit;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.model.Provider;
@@ -46,7 +44,7 @@ public class FruitsServiceTests {
         Long providerId = 1L;
         provider.setId(providerId);
 
-        FruitRequestDTO fruit = new FruitRequestDTO("Poma",200);
+        FruitRequestDTO fruit = new FruitRequestDTO("Poma", 200);
 
         Fruit savedFruit = new Fruit();
         savedFruit.setId(1L);
@@ -60,9 +58,9 @@ public class FruitsServiceTests {
         FruitResponseDTO result = fruitService.createFruit(fruit, providerId);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(provider.getName(),result.provider().name());
-        Assertions.assertEquals(provider.getCountry(),result.provider().country());
-        Assertions.assertEquals(provider.getId(),result.provider().id());
+        Assertions.assertEquals(provider.getName(), result.provider().name());
+        Assertions.assertEquals(provider.getCountry(), result.provider().country());
+        Assertions.assertEquals(provider.getId(), result.provider().id());
         Assertions.assertEquals(1L, result.id());
         Assertions.assertEquals("Poma", result.name());
         Assertions.assertEquals(200, result.weightInKilos());
@@ -91,20 +89,20 @@ public class FruitsServiceTests {
         when(providerRepository.findById(providerId)).thenReturn(Optional.of(provider));
         when(fruitRepository.findByProviderId(providerId)).thenReturn(List.of(fruit, secondFruit));
         List<FruitResponseDTO> result = fruitService.readAllFruits(providerId);
-        Assertions.assertEquals(2,result.size());
-        Assertions.assertEquals(1L,result.get(0).id());
-        Assertions.assertEquals("Poma",result.get(0).name());
-        Assertions.assertEquals(200,result.get(0).weightInKilos());
+        Assertions.assertEquals(2, result.size());
+        Assertions.assertEquals(1L, result.get(0).id());
+        Assertions.assertEquals("Poma", result.get(0).name());
+        Assertions.assertEquals(200, result.get(0).weightInKilos());
         Assertions.assertNotNull(result.get(0).provider());
-        Assertions.assertEquals(1L,result.get(0).provider().id());
-        Assertions.assertEquals("Vendefrutas",result.get(0).provider().name());
+        Assertions.assertEquals(1L, result.get(0).provider().id());
+        Assertions.assertEquals("Vendefrutas", result.get(0).provider().name());
 
-        Assertions.assertEquals(2L,result.get(1).id());
-        Assertions.assertEquals("Pera",result.get(1).name());
-        Assertions.assertEquals(300,result.get(1).weightInKilos());
+        Assertions.assertEquals(2L, result.get(1).id());
+        Assertions.assertEquals("Pera", result.get(1).name());
+        Assertions.assertEquals(300, result.get(1).weightInKilos());
         Assertions.assertNotNull(result.get(1).provider());
-        Assertions.assertEquals(1L,result.get(1).provider().id());
-        Assertions.assertEquals("Vendefrutas",result.get(1).provider().name());
+        Assertions.assertEquals(1L, result.get(1).provider().id());
+        Assertions.assertEquals("Vendefrutas", result.get(1).provider().name());
         verify(fruitRepository).findByProviderId(providerId);
         verify(providerRepository).findById(providerId);
     }
@@ -155,7 +153,7 @@ public class FruitsServiceTests {
 
     @Test
     public void updateFruitShouldUpdateAndReturnFruitWhenItExists() {
-        FruitRequestDTO fruit = new FruitRequestDTO("Poma",200);
+        FruitRequestDTO fruit = new FruitRequestDTO("Poma", 200);
 
         Long providerId = 1L;
         Provider provider = new Provider();
@@ -185,7 +183,7 @@ public class FruitsServiceTests {
 
     @Test
     public void updateFruitNotFound() {
-        FruitRequestDTO fruit = new FruitRequestDTO("Poma",200);
+        FruitRequestDTO fruit = new FruitRequestDTO("Poma", 200);
         Long providerId = 1L;
         Provider provider = new Provider();
         provider.setName("Frutero");

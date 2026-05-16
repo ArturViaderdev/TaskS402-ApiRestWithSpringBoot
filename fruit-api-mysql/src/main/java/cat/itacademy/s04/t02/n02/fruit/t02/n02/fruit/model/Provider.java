@@ -53,8 +53,7 @@ public class Provider {
         this.country = country;
     }
 
-    public Provider()
-    {
+    public Provider() {
 
     }
 }

@@ -2,7 +2,6 @@ package cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.controller;
 
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.ProviderRequestDTO;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.dto.ProviderResponseDTO;
-import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.model.Provider;
 import cat.itacademy.s04.t02.n02.fruit.t02.n02.fruit.service.ProviderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -23,17 +22,16 @@ public class ProviderController {
 
     @GetMapping("/providers")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProviderResponseDTO> getProviders()
-    {
+    public List<ProviderResponseDTO> getProviders() {
         return providerService.getProviders();
     }
 
     @PostMapping("/providers")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ProviderResponseDTO> postProvider(@Valid @RequestBody ProviderRequestDTO provider) {
-            ProviderResponseDTO savedProvider = providerService.createProvider(provider);
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").build(savedProvider.id());
-            return ResponseEntity.created(location).body(savedProvider);
+        ProviderResponseDTO savedProvider = providerService.createProvider(provider);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").build(savedProvider.id());
+        return ResponseEntity.created(location).body(savedProvider);
     }
 
     @PutMapping("/providers/{id}")

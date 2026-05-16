@@ -34,7 +34,7 @@ public class FruitServiceImpl implements FruitService {
         if (fruit.name().isEmpty()) {
             throw new FruitNameIsEmpty();
         }
-        Fruit fruitToSave = FruitMapper.toEntity(fruit,provider.get());
+        Fruit fruitToSave = FruitMapper.toEntity(fruit, provider.get());
 
         return FruitMapper.toDTO(fruitRepository.save(fruitToSave));
     }
@@ -68,7 +68,7 @@ public class FruitServiceImpl implements FruitService {
             throw new ProviderNotFound();
         }
 
-        Fruit saveFruit = FruitMapper.toEntity(fruit,providerObject.get());
+        Fruit saveFruit = FruitMapper.toEntity(fruit, providerObject.get());
         saveFruit.setId(id);
         return FruitMapper.toDTO(fruitRepository.save(saveFruit));
     }
