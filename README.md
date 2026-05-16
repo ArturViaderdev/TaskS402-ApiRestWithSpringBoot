@@ -38,6 +38,10 @@ Through these exercises, you will learn how to:
 │       │   │                       └── fruit
 │       │   │                           ├── controller
 │       │   │                           │   └── FruitController.java
+│       │   │                           ├── dto
+│       │   │                           │   ├── FruitMapper.java
+│       │   │                           │   ├── FruitRequestDTO.java
+│       │   │                           │   └── FruitResponseDTO.java
 │       │   │                           ├── exception
 │       │   │                           │   ├── ErrorResponse.java
 │       │   │                           │   └── GlobalExceptionHandler.java
@@ -77,6 +81,12 @@ Through these exercises, you will learn how to:
 │       │   │                       └── fruit
 │       │   │                           ├── controller
 │       │   │                           │   └── OrderController.java
+│       │   │                           ├── dto
+│       │   │                           │   ├── OrderItemDTO.java
+│       │   │                           │   ├── OrderItemMapper.java
+│       │   │                           │   ├── OrderMapper.java
+│       │   │                           │   ├── OrderRequestDTO.java
+│       │   │                           │   └── OrderResponseDTO.java
 │       │   │                           ├── exception
 │       │   │                           │   ├── ClientNameIsEmptyException.java
 │       │   │                           │   ├── ErrorResponse.java
@@ -127,6 +137,13 @@ Through these exercises, you will learn how to:
 │       │   │                                       ├── controller
 │       │   │                                       │   ├── FruitController.java
 │       │   │                                       │   └── ProviderController.java
+│       │   │                                       ├── dto
+│       │   │                                       │   ├── FruitMapper.java
+│       │   │                                       │   ├── FruitRequestDTO.java
+│       │   │                                       │   ├── FruitResponseDTO.java
+│       │   │                                       │   ├── ProviderMapper.java
+│       │   │                                       │   ├── ProviderRequestDTO.java
+│       │   │                                       │   └── ProviderResponseDTO.java
 │       │   │                                       ├── exception
 │       │   │                                       │   ├── ErrorResponse.java
 │       │   │                                       │   ├── FruitIdDoesNotExists.java
@@ -175,6 +192,7 @@ Through these exercises, you will learn how to:
 │   │   ├── build
 │   │   │   └── mongodb
 │   │   │       └── Dockerfile
+│   │   ├── data
 │   │   ├── docker-compose.yml
 │   │   └── fruit-api-mongo-0.0.1-SNAPSHOT.jar
 │   └── fruit-api-mysql
