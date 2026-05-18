@@ -31,11 +31,6 @@ public class OrderServiceTest {
     @InjectMocks
     private OrderServiceImpl orderService;
 
-    @BeforeEach
-    public void delete() {
-        orderRepository.deleteAll();
-    }
-
     @Test
     public void createOrderShouldSaveAndReturnOrder() {
         List<OrderItemDTO> items = new ArrayList<>();
